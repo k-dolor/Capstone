@@ -16,7 +16,7 @@
                             <th>Product ID</th>
                             <th>Product Name</th>
                             <th>Category</th>
-                            <th>Supplier</th>
+                             {{-- <th>Supplier</th> --}}
                             <th>Quantity in Stock</th>
                             <th>Stock Status</th>
                             {{-- <th>Reorder Level</th> --}}
