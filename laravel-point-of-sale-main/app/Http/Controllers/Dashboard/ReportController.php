@@ -8,58 +8,208 @@ use App\Http\Controllers\Controller;
 use App\Models\Delivery;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Category;
+use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
     /**
      * Display the product report page.
      */
-    public function products()
+    public function index()
     {
-        // Fetch all products with their category
-        $products = Product::with('category')->get();
-
-        // Pass the products data to the view
-        return view('reports.products', compact('products'));
-    }
-
-    /**
-     * Display the sales report page.
-     */
-    // public function sales()
-    // {
-    //     return view('reports.sales');
-    // }
-    public function sales()
-    {
-        // Fetch all sales data from the orders table
-        $sales = Order::with('customer') // Include related customer data if needed
+        // Get total sales for this month
+        $thisMonthSales = DB::table('order_details')
+            ->join('products', 'order_details.product_id', '=', 'products.id')
+            ->select('products.product_name', DB::raw('SUM(order_details.quantity * order_details.unitcost) as total_sales'))
+            ->whereMonth('order_details.created_at', Carbon::now()->month)
+            ->whereYear('order_details.created_at', Carbon::now()->year)
+            ->groupBy('products.product_name')
             ->get();
-
-        // Pass the sales data to the view
-        return view('reports.sales', compact('sales'));
+    
+        // Get total sales for last month
+        $lastMonthSales = DB::table('order_details')
+            ->join('products', 'order_details.product_id', '=', 'products.id')
+            ->select('products.product_name', DB::raw('SUM(order_details.quantity * order_details.unitcost) as total_sales'))
+            ->whereMonth('order_details.created_at', Carbon::now()->subMonth()->month)
+            ->whereYear('order_details.created_at', Carbon::now()->subMonth()->year)
+            ->groupBy('products.product_name')
+            ->get();
+    
+        // Get monthly sales data for the bar chart
+        $monthlySales = DB::table('order_details')
+            ->join('products', 'order_details.product_id', '=', 'products.id')
+            ->join('orders', 'orders.id', '=', 'order_details.order_id')
+            ->select(DB::raw('MONTH(orders.created_at) as month'), 
+                     DB::raw('YEAR(orders.created_at) as year'),
+                     'products.product_name as product_name', 
+                     DB::raw('SUM(order_details.quantity * order_details.unitcost) as total_sales'))
+            ->groupBy(DB::raw('YEAR(orders.created_at), MONTH(orders.created_at), products.product_name'))
+            ->get();
+    
+        // Pass all necessary data to the view
+        return view('reports.index', compact('thisMonthSales', 'lastMonthSales', 'monthlySales'));
     }
+    
+    
+
+    
+    public function products(Request $request)
+{
+    // Fetch the category filter from the request
+    $categoryFilter = $request->input('category_filter');
+
+    // Base query for products with their category
+    $query = Product::with('category');
+
+    // Apply category filter if selected
+    if ($categoryFilter) {
+        $query->whereHas('category', function ($q) use ($categoryFilter) {
+            $q->where('id', $categoryFilter);
+        });
+    }
+
+    // Fetch the filtered products
+    $products = $query->get();
+
+    // Fetch all categories for the filter dropdown
+    $categories = Category::all();
+
+    // Pass the products and categories data to the view
+    return view('reports.products', compact('products', 'categories', 'categoryFilter'));
+}
+
+    public function sales(Request $request)
+    {
+        // Fetch filters from the request
+        $filter = $request->input('filter'); // 'day', 'week', 'month', 'specific_day', 'specific_month'
+        $specificDay = $request->input('specific_day');
+        $specificMonth = $request->input('specific_month');
+    
+        // Base query for sales data
+        $query = Order::with('customer');
+    
+        // Apply date filter based on the user's selection
+        if ($filter == 'day') {
+            // Filter for today
+            $query->whereDate('order_date', Carbon::today());
+        } elseif ($filter == 'week') {
+            // Filter for this week
+            $startOfWeek = Carbon::now()->startOfWeek();
+            $endOfWeek = Carbon::now()->endOfWeek();
+            $query->whereBetween('order_date', [$startOfWeek, $endOfWeek]);
+        } elseif ($filter == 'month') {
+            // Filter for this month
+            $query->whereMonth('order_date', Carbon::now()->month);
+        } elseif ($filter == 'specific_day' && $specificDay) {
+            // Filter for specific day
+            $query->whereDate('order_date', $specificDay);
+        } elseif ($filter == 'specific_week' && $request->input('specific_week')) {
+            // Filter for specific week
+            $specificWeek = $request->input('specific_week');
+            $startOfWeek = Carbon::parse($specificWeek . '-1')->startOfWeek();
+            $endOfWeek = $startOfWeek->copy()->endOfWeek();
+            $query->whereBetween('order_date', [$startOfWeek, $endOfWeek]);
+        } elseif ($filter == 'specific_month' && $specificMonth) {
+            // Filter for specific month
+            $query->whereMonth('order_date', Carbon::parse($specificMonth)->month);
+        }
+    
+        // Execute the query to get the sales data
+        $sales = $query->get();
+    
+        // Pass sales data and filter type to the view
+        return view('reports.sales', compact('sales', 'filter', 'specificDay', 'specificMonth'));
+    }
+    
+
+    //===================================================================
+
+public function exportSales(Request $request)
+{
+    ini_set('max_execution_time', 0);
+    ini_set('memory_limit', '4000M');
+
+    // Retrieve the filters from the request
+    $filter = $request->input('filter');
+    $specificDay = $request->input('specific_day');
+    $specificWeek = $request->input('specific_week');
+    $specificMonth = $request->input('specific_month');
+
+    // Apply filters to fetch the sales data
+    $query = Order::query();
+    if ($filter === 'specific_day' && $specificDay) {
+        $query->whereDate('order_date', $specificDay);
+    } elseif ($filter === 'specific_week' && $specificWeek) {
+        $startDate = date('Y-m-d', strtotime($specificWeek));
+        $endDate = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));
+        $query->whereBetween('order_date', [$startDate, $endDate]);
+    } elseif ($filter === 'specific_month' && $specificMonth) {
+        $query->whereMonth('order_date', date('m', strtotime($specificMonth)))
+              ->whereYear('order_date', date('Y', strtotime($specificMonth)));
+    }
+    $sales = $query->get();
+
+    // Prepare data for export
+    $salesData[] = ['Order Date', 'Total Amount', 'Payment Status', 'Order Status'];
+    foreach ($sales as $sale) {
+        $salesData[] = [
+            $sale->order_date,
+            $sale->total,
+            ucfirst($sale->payment_status),
+            ucfirst($sale->order_status),
+        ];
+    }
+
+    // Export data to Excel
+    try {
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+        $spreadsheet->getActiveSheet()->fromArray($salesData);
+        $writer = new Xls($spreadsheet);
+
+        // Set headers for download
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="Sales_Report.xls"');
+        header('Cache-Control: max-age=0');
+        ob_end_clean();
+        $writer->save('php://output');
+        exit();
+    } catch (\Exception $e) {
+        return redirect()->back()->withErrors('Error exporting sales data.');
+    }
+}
+//=============================================================================================
+
+
 
     /**
      * Display the stock report page.
      */
-    public function stock()
-    {
-        $products = Product::all(); 
-        return view('reports.stock' , compact('products'));
+
+    public function stockReport(Request $request)
+{
+    $query = Product::query();
+
+    if ($request->has('stock_filter')) {
+        $filter = $request->stock_filter;
+        if ($filter === 'low_stock') {
+            $query->where('product_store', '>', 0)->where('product_store', '<', 20);
+        } elseif ($filter === 'out_of_stock') {
+            $query->where('product_store', '<=', 0);
+        } elseif ($filter === 'in_stock') {
+            $query->where('product_store', '>=', 20);
+        }
     }
 
-     /**
-     * Display the stock report page.
-     */
-    public function deliveryReport()
-    {
-        // Retrieve all deliveries from the database
-        $deliveries = Delivery::all();
+    $products = $query->get();
 
-        // Pass the deliveries data to the view
-        return view('reports.deliveries', compact('deliveries'));
-    }
+    return view('reports.stock', compact('products'));
+}
+
 
     public function incomeReport(Request $request)
     {
@@ -108,6 +258,7 @@ class ReportController extends Controller
         // Pass values to the view
         return view('reports.income', compact('grossIncome', 'netIncome', 'details', 'startDate', 'endDate'));
     }
+    
     
 
 

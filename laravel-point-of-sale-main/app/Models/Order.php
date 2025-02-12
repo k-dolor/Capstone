@@ -22,6 +22,7 @@ class Order extends Model
         'payment_status',
         'pay',
         'due',
+        'discount',
     ];
 
     public $sortable = [
@@ -41,10 +42,12 @@ class Order extends Model
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
     }
 
-    public function orderDetails()
-{
-    return $this->hasMany(OrderDetails::class, 'order_id', 'id'); // Ensure 'order_id' matches your table column
-}
+ // Define relationship with orderDetails
+ public function orderDetails()
+ {
+     return $this->hasMany(OrderDetails::class, 'order_id', 'id');
+ }
+
 
 
 }

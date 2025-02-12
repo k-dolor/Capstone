@@ -17,12 +17,10 @@ return new class extends Migration
             $table->integer('category_id');
             $table->integer('supplier_id');
             $table->string('product_code')->nullable();
-            // $table->string('product_garage')->nullable();
             $table->string('product_image')->nullable();
             $table->string('product_store')->nullable();
-            // $table->integer('reorder_level')->nullable();
+            $table->integer('reorder_level')->default(10); // Default reorder level
             $table->date('buying_date')->nullable();
-            $table->string('expire_date')->nullable();
             $table->integer('buying_price')->nullable();
             $table->integer('selling_price')->nullable();
             $table->timestamps();
@@ -32,8 +30,10 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn(['reorder_level', 'product_store']);
+        });
     }
 };

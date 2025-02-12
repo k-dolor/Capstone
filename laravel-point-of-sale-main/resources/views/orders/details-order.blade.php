@@ -16,27 +16,13 @@
                     <!-- begin: Show Data -->
                     <div class="form-group row align-items-center">
                         <div class="col-md-12">
-                            {{-- <div class="profile-img-edit">
-                                <div class="crm-profile-img-edit">
-                                    <img class="crm-profile-pic rounded-circle avatar-100" id="image-preview" src="{{ $order->customer->photo ? asset('storage/customers/'.$order->customer->photo) : asset('storage/customers/default.png') }}" alt="profile-pic">
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
 
                     <div class="row align-items-center">
-                        {{-- <div class="form-group col-md-12">
+                        <div class="form-group col-md-12">
                             <label>Customer Name</label>
                             <input type="text" class="form-control bg-white" value="{{ $order->customer->name }}" readonly>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label>Customer Email</label>
-                            <input type="text" class="form-control bg-white" value="{{ $order->customer->email }}" readonly>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Customer Phone</label>
-                            <input type="text" class="form-control bg-white" value="{{ $order->customer->phone }}" readonly>
-                        </div> --}}
                         <div class="form-group col-md-6">
                             <label>Order Date</label>
                             <input type="text" class="form-control bg-white" value="{{ $order->order_date }}" readonly>
@@ -119,4 +105,30 @@
 </div>
 
 @include('components.preview-img-form')
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('actionModal');
+        const modalContent = document.getElementById('modalContent');
+
+        modal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Button that triggered the modal
+            const action = button.getAttribute('data-action');
+            const url = button.getAttribute('data-url');
+            const id = button.getAttribute('data-id');
+
+            modalContent.innerHTML = `<p>Loading ${action} for Order #${id}...</p>`;
+
+            // Simulate content loading (you can replace this with an AJAX call if needed)
+            setTimeout(() => {
+                if (action === 'details') {
+                    modalContent.innerHTML = `<p>Here are the details for Order #${id}. <a href="${url}" target="_blank">View Full Details</a></p>`;
+                } else if (action === 'print') {
+                    modalContent.innerHTML = `<p>Preparing to print Invoice for Order #${id}. <a href="${url}" target="_blank">Download Invoice</a></p>`;
+                }
+            }, 500); // Simulated delay
+        });
+    });
+</script>
+
 @endsection

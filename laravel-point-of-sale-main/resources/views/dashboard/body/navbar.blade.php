@@ -1,5 +1,13 @@
-<div class="iq-top-navbar" style="background-color:  rgb(15, 15, 108);">
-    <div class="iq-navbar-custom" style="background-color:  rgb(15, 15, 108);">
+{{-- @php
+    $notifications = \App\Models\Notification::where('is_read', false)->latest()->get();
+@endphp
+ --}}
+
+
+
+
+<div class="iq-top-navbar" style="background-color:  #281e32;">
+    <div class="iq-navbar-custom" style="background-color:  #281e32;">
         <nav class="navbar navbar-expand-lg navbar-light p-0">
             <div class="iq-navbar-logo d-flex align-items-center justify-content-between">
                 <i class="ri-menu-line wrapper-menu"></i>
@@ -9,10 +17,10 @@
                 </a>
             </div>
             <div class="iq-search-bar device-search">
-                <form action="#" class="searchbox">
+                {{-- <form action="#" class="searchbox">
                     <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                     <input type="text" class="text search-input" placeholder="Search here...">
-                </form>
+                </form> --}}
             </div>
             <div class="d-flex align-items-center">
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -23,20 +31,13 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto navbar-list align-items-center">
-                        <li class="nav-item nav-icon search-content">
-                            <a href="#" class="search-toggle rounded" id="dropdownSearch" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="ri-search-line"></i>
-                            </a>
-                            <div class="iq-search-bar iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownSearch">
-                                <form action="#" class="searchbox p-2">
-                                    <div class="form-group mb-0 position-relative">
-                                        <input type="text" class="text search-input font-size-12"
-                                            placeholder="type here to search...">
-                                        <a href="#" class="search-link"><i class="las la-search"></i></a>
-                                    </div>
-                                </form>
-                            </div>
+                        <li class="nav-item nav-icon">
+                            <button type="button" class="btn btn-light" id="notificationButton" data-toggle="modal" data-target="#notificationModal">
+                                <i class="ri-notification-3-line"></i>
+                                @if($notifications->count() > 0)
+                                    <span class="badge badge-danger">{{ $notifications->count() }}</span>
+                                @endif
+                            </button>
                         </li>
                         <li class="nav-item nav-icon dropdown caption-content">
                             <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton4"
@@ -47,7 +48,7 @@
                                 <div class="card shadow-none m-0">
                                     <div class="card-body p-0 text-center">
                                         <div class="media-body profile-detail text-center">
-                                            <img src="{{ asset('assets/images/page-img/profile-bg.jpg') }}" alt="profile-bg"
+                                            <img src="{{ asset('assets/images/page-img/profile-bg.jpg') }}" alt="profile"
                                                 class="rounded-top img-fluid mb-4">
                                             <img src="{{ auth()->user()->photo ? asset('storage/profile/'.auth()->user()->photo) : asset('assets/images/user/1.png') }}" alt="profile-img"
                                                 class="rounded profile-img img-fluid avatar-70">
@@ -73,3 +74,57 @@
         </nav>
     </div>
 </div>
+
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Notification content goes here -->
+                <ul class="list-group">
+                    @foreach($notifications as $notification)
+                    <li class="list-group-item">
+                        <a href="{{ route('inventory.index') }}" class="dropdown-item">
+                            {{ $notification->message }}
+                        </a>
+                    </li>
+                    
+                    @endforeach
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .nav-item .btn-light {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px; /* Adjust width to match profile image size */
+        height: 50px; /* Adjust height to match profile image size */
+        border-radius: 20%; /* Make it circular */
+        padding: 0;
+    }
+    .nav-item .btn-light i {
+        font-size: 24px; /* Adjust icon size */
+    }
+    .nav-item .badge {
+        position: absolute;
+        top: 2px; /* Adjust position */
+        right: 2px; /* Adjust position */
+        font-size: 0.75rem;
+        padding: 0.20rem 0.4rem;
+        border-radius: 50%;
+    }
+</style>

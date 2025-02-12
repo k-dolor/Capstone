@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Delivery extends Model
-{  
+class Notification extends Model
+{
     use HasFactory;
-
     protected $fillable = [
-        'order_id', 'customer_name', 'delivery_address', 'delivery_date', 'status', 'driver_name'
+        'message',
+        'type',
+        'is_read',
+        'url', // Add the url field to the fillable array
     ];
-    
 }

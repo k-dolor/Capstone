@@ -13,7 +13,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <div class="header-title">
-                        <h4 class="card-title">Barcode</h4>
+                        {{-- <h4 class="card-title">Barcode</h4>
                     </div>
                 </div>
 
@@ -31,7 +31,7 @@
                     <!-- end: Show Data -->
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="col-lg-12">
             <div class="card">
@@ -68,20 +68,12 @@
                             <input type="text" class="form-control bg-white" value="{{  $product->supplier->name }}" readonly>
                         </div>
                         <div class="form-group col-md-6">
-                            <label>Product Garage</label>
-                            <input type="text" class="form-control bg-white" value="{{  $product->product_garage }}" readonly>
-                        </div>
-                        <div class="form-group col-md-6">
                             <label>Product Store</label>
                             <input type="text" class="form-control bg-white" value="{{  $product->product_store }}" readonly>
                         </div>
                         <div class="form-group col-md-6">
                             <label>Buying Date</label>
                             <input class="form-control bg-white" id="buying_date" value="{{ $product->buying_date }}" readonly/>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Expire Date</label>
-                            <input class="form-control bg-white" id="expire_date" value="{{ $product->expire_date }}" readonly />
                         </div>
                         <div class="form-group col-md-6">
                             <label>Buying Price</label>

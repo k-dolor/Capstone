@@ -20,7 +20,8 @@ use App\Http\Controllers\Dashboard\SalesController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\TransactionController;
 use App\Http\Controllers\Dashboard\InventoryController;
-use App\Http\Controllers\Dashboard\DeliveryController;
+use App\Http\Controllers\Dashboard\NotificationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -46,128 +47,124 @@ Route::get('/', function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
+    Route::get('/sales-chart', [SalesController::class, 'showSalesChart']);
 
-// ====== USERS ====
+
+    // ====== USERS ====
 
     Route::resource('/users', UserController::class)->except(['show']);
 
-// ====== CUSTOMERS ======
+    // ====== CUSTOMERS ======
 
     Route::resource('/customers', CustomerController::class);
 
-// ====== SUPPLIERS ======
+    // ====== SUPPLIERS ======
 
     Route::resource('/suppliers', SupplierController::class);
     
-// ====== SALES ====== ADDED CODES ROUTES ----------------------
+    // ====== SALES ========
 
-Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
+    Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
 
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
 
-///////////////////////REPORTSS///////////////////////
+    //===================REPORTS===================
 
- // Route for Product Report
-Route::get('/reports/products', [ReportController::class, 'products'])->name('reports.products');
+    // Route for Reports Main Page
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 
-// Route for Sales Report
-Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+    // Route for Product Report
+    Route::get('/reports/products', [ReportController::class, 'products'])->name('reports.products');
 
-// Route for Stock Report
-Route::get('/reports/stock', [ReportController::class, 'stock'])->name('reports.stock');
+    // Route for Sales Report
+    Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+    Route::get('/sales/export', [ReportController::class, 'exportSales'])->name('sales.exportData');
 
-Route::get('/income-report', [ReportController::class, 'incomeReport'])->name('reports.income');
 
+    // Route for Stock Report
+    Route::get('/reports/stock', [ReportController::class, 'stockReport'])->name('reports.stock');
 
-///inventoryyyy
+    // Route for Income
+    Route::get('/income-report', [ReportController::class, 'incomeReport'])->name('reports.income');
 
+    //============Inventory===============
+
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    
+    
+
+Route::post('/inventory/stock-in', [InventoryController::class, 'stockIn'])->name('inventory.stock-in');
+Route::get('/inventory/{product}/history', [InventoryController::class, 'stockInHistory'])->name('products.stock-in-history');
 Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
 
 
 
-/// ==== delivery =====
-Route::resource('deliveries', DeliveryController::class); 
-Route::get('/delivery', [DeliveryController::class, 'index'])->name('delivery.index');
-Route::get('/delivery/create', [DeliveryController::class, 'create'])->name('delivery.create');
-Route::post('/delivery', [DeliveryController::class, 'store'])->name('delivery.store');
-Route::post('/delivery/{id}/mark-delivered', [DeliveryController::class, 'markAsDelivered'])->name('delivery.markAsDelivered');
-Route::get('/delivery/{id}/update-status', [DeliveryController::class, 'updateStatusForm'])->name('delivery.updateStatusForm');
-Route::post('/delivery/{id}/update-status', [DeliveryController::class, 'updateStatus'])->name('delivery.updateStatus');
-Route::delete('/delivery/{id}/cancel', [DeliveryController::class, 'cancelDelivery'])->name('delivery.cancel');
 
-// Add this route to your existing routes file
-// Route::get('/delivery-report', [ReportController::class, 'delivery'])->name('reports.delivery');
-Route::get('/reports/deliveries', [ReportController::class, 'deliveryReport'])->name('reports.deliveries');
-
-
-// ====== EMPLOYEES ======
-
-    Route::resource('/employees', EmployeeController::class);
-
-// ====== EMPLOYEE ATTENDENCE ======
-
-    Route::resource('/employee/attendence', AttendenceController::class)->except(['show', 'update', 'destroy']);
-
-// ====== SALARY EMPLOYEE ======
-
-    // PaySalary
-    Route::resource('/pay-salary', PaySalaryController::class)->except(['show', 'create', 'edit', 'update']);
-    Route::get('/pay-salary/history', [PaySalaryController::class, 'payHistory'])->name('pay-salary.payHistory');
-    Route::get('/pay-salary/history/{id}', [PaySalaryController::class, 'payHistoryDetail'])->name('pay-salary.payHistoryDetail');
-    Route::get('/pay-salary/{id}', [PaySalaryController::class, 'paySalary'])->name('pay-salary.paySalary');
-
-    // Advance Salary
-    Route::resource('/advance-salary', AdvanceSalaryController::class)->except(['show']);
-
-// ====== PRODUCTS ======
+    // ====== PRODUCTS ======
     Route::get('/products/import', [ProductController::class, 'importView'])->name('products.importView');
     Route::post('/products/import', [ProductController::class, 'importStore'])->name('products.importStore');
     Route::get('/products/export', [ProductController::class, 'exportData'])->name('products.exportData');
     Route::resource('/products', ProductController::class);
+    ///modal
+    Route::get('/products/{id}', [ProductController::class, 'show']);
+    Route::post('/products/stock-in', [ProductController::class, 'stockIn'])->name('products.stock-in');
+    Route::post('/products/stock-in', [ProductController::class, 'stockIn'])->name('products.stock-in');
 
-// ====== CATEGORY PRODUCTS ======
+    Route::get('/products/{product}/stock-in-history', [ProductController::class, 'stockInHistory'])->name('products.stock-in-history');
+    Route::put('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
+
+
+//////////////////NOTIFICATION
+
+
+Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
+
+    
+   
+
+    // ====== CATEGORY PRODUCTS ======
     Route::resource('/categories', CategoryController::class);
 
-// ====== POS ======
+    // ====== POS ======
     Route::get('/pos', [PosController::class,'index'])->name('pos.index');
     Route::post('/pos/add', [PosController::class, 'addCart'])->name('pos.addCart');
     Route::post('/pos/update/{rowId}', [PosController::class, 'updateCart'])->name('pos.updateCart');
     Route::get('/pos/delete/{rowId}', [PosController::class, 'deleteCart'])->name('pos.deleteCart');
     Route::post('/pos/invoice/create', [PosController::class, 'createInvoice'])->name('pos.createInvoice');  // create invoce view before pending.. after create button on pos//
     Route::post('/pos/invoice/print', [PosController::class, 'printInvoice'])->name('pos.printInvoice');
-    Route::post('/pos/store-order', [YourController::class, 'storeOrder'])->name('pos.storeOrder');
+    Route::post('/pos/store-order', [PosController::class, 'storeOrder'])->name('pos.storeOrder');
+
+
 
 
     // Create Order
     Route::post('/pos/order', [OrderController::class, 'storeOrder'])->name('pos.storeOrder');
 
-// ====== ORDERS ======
-Route::get('/orders/pending', [OrderController::class, 'pendingOrders'])->name('order.pendingOrders');
-Route::get('/orders/complete', [OrderController::class, 'completeOrders'])->name('order.completeOrders');
-Route::get('/orders/details/{order_id}', [OrderController::class, 'orderDetails'])->name('order.orderDetails');
-// Route::put('/orders/update/status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
-Route::put('/order/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
+    // ====== ORDERS ======
+    Route::get('/orders/complete', [OrderController::class, 'completeOrders'])->name('order.completeOrders');
+    Route::get('/orders/details/{order_id}', [OrderController::class, 'orderDetails'])->name('order.orderDetails');
+    Route::get('/invoice/{order_id}', [OrderController::class, 'showInvoice'])->name('invoice.show');
+    Route::get('/orders/invoice/download/{order_id}', [OrderController::class, 'invoiceDownload'])->name('order.invoiceDownload');
+    Route::get('/orders/{id}', [OrderController::class, 'getOrderDetails']);
+    Route::put('/order/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
+    
 
-Route::get('/invoice/{order_id}', [OrderController::class, 'showInvoice'])->name('invoice.show');
+    // Pending Due
+    // Route::get('/pending/due', [OrderController::class, 'pendingDue'])->name('order.pendingDue');
+    // Route::get('/order/due/{id}', [OrderController::class, 'orderDueAjax'])->name('order.orderDueAjax');
+    // Route::post('/update/due', [OrderController::class, 'updateDue'])->name('order.updateDue');
 
-Route::get('/orders/invoice/download/{order_id}', [OrderController::class, 'invoiceDownload'])->name('order.invoiceDownload');
-Route::get('/orders/{id}', [OrderController::class, 'getOrderDetails']);
+    // Stock Management
+    Route::get('/stock', [OrderController::class, 'stockManage'])->name('order.stockManage');
 
-// Pending Due
-Route::get('/pending/due', [OrderController::class, 'pendingDue'])->name('order.pendingDue');
-Route::get('/order/due/{id}', [OrderController::class, 'orderDueAjax'])->name('order.orderDueAjax');
-Route::post('/update/due', [OrderController::class, 'updateDue'])->name('order.updateDue');
-
-// Stock Management
-Route::get('/stock', [OrderController::class, 'stockManage'])->name('order.stockManage');
-
-// ====== DATABASE BACKUP ======
+    // ====== DATABASE BACKUP ======
     Route::get('/database/backup', [DatabaseBackupController::class, 'index'])->name('backup.index');
     Route::get('/database/backup/now', [DatabaseBackupController::class, 'create'])->name('backup.create');
     Route::get('/database/backup/download/{getFileName}', [DatabaseBackupController::class, 'download'])->name('backup.download');
     Route::get('/database/backup/delete/{getFileName}', [DatabaseBackupController::class, 'delete'])->name('backup.delete');
 
-// ====== ROLE CONTROLLER ======
+    // ====== ROLE CONTROLLER ======
     // Permissions
     Route::get('/permission', [RoleController::class, 'permissionIndex'])->name('permission.index');
     Route::get('/permission/create', [RoleController::class, 'permissionCreate'])->name('permission.create');

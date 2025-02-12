@@ -12,24 +12,44 @@ use Gloudemans\Shoppingcart\Facades\Cart;
 
 class PosController extends Controller
 {
+    // public function index()
+    // {
+    //     $todayDate = Carbon::now();
+    //     $row = (int) request('row', 20);
+
+    //     if ($row < 1 || $row > 100) {
+    //         abort(400, 'The per-page parameter must be an integer between 1 and 100.');
+    //     }
+
+    //     return view('pos.index', [
+    //         'customers' => Customer::all()->sortBy('name'),
+    //         'productItem' => Cart::content(),
+    //         'products' => Product::where('product_name', '>', $todayDate)->filter(request(['search']))
+    //             ->sortable()
+    //             ->paginate($row)
+    //             ->appends(request()->query()),
+    //     ]);
+    // }
+    
     public function index()
-    {
-        $todayDate = Carbon::now();
-        $row = (int) request('row', 10);
+{
+    $row = (int) request('row', 20);
 
-        if ($row < 1 || $row > 100) {
-            abort(400, 'The per-page parameter must be an integer between 1 and 100.');
-        }
-
-        return view('pos.index', [
-            'customers' => Customer::all()->sortBy('name'),
-            'productItem' => Cart::content(),
-            'products' => Product::where('expire_date', '>', $todayDate)->filter(request(['search']))
-                ->sortable()
-                ->paginate($row)
-                ->appends(request()->query()),
-        ]);
+    if ($row < 1 || $row > 100) {
+        abort(400, 'The per-page parameter must be an integer between 1 and 100.');
     }
+
+    return view('pos.index', [
+        'customers' => Customer::all()->sortBy('name'),
+        'productItem' => Cart::content(),
+        'products' => Product::filter(request(['search']))
+            ->sortable()
+            ->paginate($row)
+            ->appends(request()->query()),
+    ]);
+}
+
+
 
     public function addCart(Request $request)
     {
@@ -74,32 +94,22 @@ class PosController extends Controller
 
     public function createInvoice(Request $request)
     {
-        $rules = [
-            'customer_id' => 'required'
-        ];
 
         $validatedData = $request->validate($rules);
-        $customer = Customer::where('id', $validatedData['customer_id'])->first();
         $content = Cart::content();
 
         return view('pos.create-invoice', [
-            'customer' => $customer,
             'content' => $content
         ]);
     }
 
     public function printInvoice(Request $request)
     {
-        $rules = [
-            'customer_id' => 'required'
-        ];
 
         $validatedData = $request->validate($rules);
-        $customer = Customer::where('id', $validatedData['customer_id'])->first();
         $content = Cart::content();
 
         return view('pos.print-invoice', [
-            'customer' => $customer,
             'content' => $content
         ]);
     }

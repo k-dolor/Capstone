@@ -34,17 +34,19 @@ class DatabaseSeeder extends Seeder
         'name' => 'User',
         'username' => 'user',
         'email' => 'user@gmail.com',
+        
     ]);
 
     // Create other entities
-    Employee::factory(5)->create();
+    // Employee::factory(5)->create();
     Customer::factory(15)->create();
-    Supplier::factory(5)->create();
+    Supplier::factory(3)->create();
 
     // Create specific categories
     $categories = [
         'LPG',
         'Oxygen',
+        'Refill',
         'Accessories',
     ];
 
@@ -58,7 +60,7 @@ class DatabaseSeeder extends Seeder
     // Create specific products with buying and expiry dates
     $randomSupplierId1 = Supplier::inRandomOrder()->first()->id;
     Product::create([
-        'product_name' => 'LPG Gas 11kg',
+        'product_name' => '2.7kg LPG Prycegas',
         'product_code' => IdGenerator::generate([
             'table' => 'products',
             'field' => 'product_code',
@@ -67,16 +69,17 @@ class DatabaseSeeder extends Seeder
         ]),
         'supplier_id' => $randomSupplierId1,
         'category_id' => 1,
-        'buying_price' => 1170,
-        'selling_price' => 1350,
-        'product_store' => 50, // example stock
+        'buying_price' => 350,
+        'selling_price' => 470,
+        'product_store' => 70, // stocks
         'buying_date' => Carbon::now()->subDays(30)->toDateString(), // days ago
-        'expire_date' => Carbon::now()->addDays(90)->toDateString(), // expires in days
+        // 'expire_date' => Carbon::now()->addDays(90)->toDateString(), // expires in days
     ]);
 
+    
     $randomSupplierId2 = Supplier::inRandomOrder()->first()->id;
     Product::create([
-        'product_name' => 'Medical Oxygen 105lbs',
+        'product_name' => '11kg LPG Prycegas',
         'product_code' => IdGenerator::generate([
             'table' => 'products',
             'field' => 'product_code',
@@ -84,17 +87,17 @@ class DatabaseSeeder extends Seeder
             'prefix' => 'PC'
         ]),
         'supplier_id' => $randomSupplierId2,
-        'category_id' => 2,
-        'buying_price' => 200,
-        'selling_price' => 240,
-        'product_store' => 100, // example stock
+        'category_id' => 1,
+        'buying_price' => 1170,
+        'selling_price' => 1225,
+        'product_store' => 50, //STOCKS
         'buying_date' => Carbon::now()->subDays(60)->toDateString(), // days ago
-        'expire_date' => Carbon::now()->addDays(70)->toDateString(), // expires in days
+        // 'expire_date' => Carbon::now()->addDays(70)->toDateString(), // expires in days
     ]);
 
     $randomSupplierId3 = Supplier::inRandomOrder()->first()->id;
     Product::create([
-        'product_name' => 'LPG Gas 22kg',
+        'product_name' => '22kg LPG Prycegas',
         'product_code' => IdGenerator::generate([
             'table' => 'products',
             'field' => 'product_code',
@@ -103,16 +106,16 @@ class DatabaseSeeder extends Seeder
         ]),
         'supplier_id' => $randomSupplierId3,
         'category_id' => 1,
-        'buying_price' => 2000,
-        'selling_price' => 2140,
-        'product_store' => 20, // example stock
+        'buying_price' => 2170,
+        'selling_price' => 2450,
+        'product_store' => 40, // example stock
         'buying_date' => Carbon::now()->subDays(15)->toDateString(), // days ago
-        'expire_date' => Carbon::now()->addDays(95)->toDateString(), // expires in days
+        // 'expire_date' => Carbon::now()->addDays(95)->toDateString(), // expires in days
     ]);
 
     $randomSupplierId4 = Supplier::inRandomOrder()->first()->id;
     Product::create([
-        'product_name' => 'LPG Gas 2.7kg',
+        'product_name' => '50kg LPG Prycegas',
         'product_code' => IdGenerator::generate([
             'table' => 'products',
             'field' => 'product_code',
@@ -121,11 +124,11 @@ class DatabaseSeeder extends Seeder
         ]),
         'supplier_id' => $randomSupplierId4,
         'category_id' => 1,
-        'buying_price' => 960,
-        'selling_price' => 1200,
+        'buying_price' => 5150,
+        'selling_price' => 5209,
         'product_store' => 5, // example stock
         'buying_date' => Carbon::now()->subDays(25)->toDateString(), // days ago
-        'expire_date' => Carbon::now()->addDays(105)->toDateString(), // expires in days
+        // 'expire_date' => Carbon::now()->addDays(105)->toDateString(), // expires in days
     ]);
 
     $randomSupplierId5 = Supplier::inRandomOrder()->first()->id;
@@ -139,22 +142,58 @@ class DatabaseSeeder extends Seeder
         ]),
         'supplier_id' => $randomSupplierId5,
         'category_id' => 2,
-        'buying_price' => 1200,
-        'selling_price' => 1350,
-        'product_store' => 5, // example stock
+        'buying_price' => 7500,
+        'selling_price' => 9000,
+        'product_store' => 25, // example stock
         'buying_date' => Carbon::now()->subDays(5)->toDateString(), // days ago
-        'expire_date' => Carbon::now()->addDays(105)->toDateString(), // expires in days
+        // 'expire_date' => Carbon::now()->addDays(105)->toDateString(), // expires in days
+    ]);
+
+    $randomSupplierId6 = Supplier::inRandomOrder()->first()->id;
+    Product::create([
+        'product_name' => 'Medical Oxygen 105bs',
+        'product_code' => IdGenerator::generate([
+            'table' => 'products',
+            'field' => 'product_code',
+            'length' => 4,
+            'prefix' => 'PC'
+        ]),
+        'supplier_id' => $randomSupplierId6,
+        'category_id' => 2,
+        'buying_price' => 7500,
+        'selling_price' => 9000,
+        'product_store' => 25, // example stock
+        'buying_date' => Carbon::now()->subDays(5)->toDateString(), // days ago
+        // 'expire_date' => Carbon::now()->addDays(105)->toDateString(), // expires in days
+    ]);
+
+    $randomSupplierId6 = Supplier::inRandomOrder()->first()->id;
+    Product::create([
+        'product_name' => 'Medical Oxygen 20lbs',
+        'product_code' => IdGenerator::generate([
+            'table' => 'products',
+            'field' => 'product_code',
+            'length' => 4,
+            'prefix' => 'PC'
+        ]),
+        'supplier_id' => $randomSupplierId6,
+        'category_id' => 2,
+        'buying_price' => 7500,
+        'selling_price' => 9000,
+        'product_store' => 25, // example stock
+        'buying_date' => Carbon::now()->subDays(5)->toDateString(), // days ago
+        // 'expire_date' => Carbon::now()->addDays(105)->toDateString(), // expires in days
     ]);
 
     // Define permissions and roles
     Permission::create(['name' => 'pos.menu', 'group_name' => 'pos']);
-    Permission::create(['name' => 'employee.menu', 'group_name' => 'employee']);
+    // Permission::create(['name' => 'employee.menu', 'group_name' => 'employee']);
     Permission::create(['name' => 'customer.menu', 'group_name' => 'customer']);
     Permission::create(['name' => 'supplier.menu', 'group_name' => 'supplier']);
     Permission::create(['name' => 'sales.menu', 'group_name' => 'sales']);
     Permission::create(['name' => 'transactions.menu', 'group_name' => 'transactions']);
-    Permission::create(['name' => 'salary.menu', 'group_name' => 'salary']);
-    Permission::create(['name' => 'attendence.menu', 'group_name' => 'attendence']);
+    // Permission::create(['name' => 'salary.menu', 'group_name' => 'salary']);
+    // Permission::create(['name' => 'attendence.menu', 'group_name' => 'attendence']);
     Permission::create(['name' => 'category.menu', 'group_name' => 'category']);
     Permission::create(['name' => 'product.menu', 'group_name' => 'product']);
     Permission::create(['name' => 'orders.menu', 'group_name' => 'orders']);
@@ -165,11 +204,11 @@ class DatabaseSeeder extends Seeder
 
     Role::create(['name' => 'SuperAdmin'])->givePermissionTo(Permission::all());
     Role::create(['name' => 'Admin'])->givePermissionTo(['customer.menu', 'user.menu', 'supplier.menu']);
-    Role::create(['name' => 'Account'])->givePermissionTo(['customer.menu', 'user.menu', 'supplier.menu']);
-    Role::create(['name' => 'Manager'])->givePermissionTo(['stock.menu', 'orders.menu', 'product.menu', 'salary.menu', 'employee.menu']);
+    // Role::create(['name' => 'Account'])->givePermissionTo(['customer.menu', 'user.menu', 'supplier.menu']);
+    // Role::create(['name' => 'Manager'])->givePermissionTo(['stock.menu', 'orders.menu', 'product.menu', 'salary.menu', 'employee.menu']);
 
     $admin->assignRole('SuperAdmin');
-    $user->assignRole('Account');
+    $user->assignRole('Admin');
 }
 
 

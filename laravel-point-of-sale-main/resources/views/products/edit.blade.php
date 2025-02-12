@@ -13,15 +13,16 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <div class="header-title">
-                        <h4 class="card-title">Edit Product</h4>
+                        <h4 class="card-title">Products</h4>
                     </div>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#editProductModal">Edit Product</button>
                 </div>
-
                 <div class="card-body">
                     <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('put')
                         <!-- begin: Input Image -->
+                        
                         <div class="form-group row align-items-center">
                             <div class="col-md-12">
                                 <div class="profile-img-edit">
@@ -85,7 +86,7 @@
                                 </div>
                                 @enderror
                             </div>
-                            <div class="form-group col-md-6">
+                            {{-- <div class="form-group col-md-6">
                                 <label for="product_garage">Product Garage</label>
                                 <input type="text" class="form-control @error('product_garage') is-invalid @enderror" id="product_garage" name="product_garage" value="{{ old('product_garage', $product->product_garage) }}">
                                 @error('product_garage')
@@ -93,7 +94,7 @@
                                     {{ $message }}
                                 </div>
                                 @enderror
-                            </div>
+                            </div> --}}
                             <div class="form-group col-md-6">
                                 <label for="product_store">Product Store</label>
                                 <input type="text" class="form-control @error('product_store') is-invalid @enderror" id="product_store" name="product_store" value="{{ old('product_store', $product->product_store) }}">
@@ -107,15 +108,6 @@
                                 <label for="buying_date">Buying Date</label>
                                 <input id="buying_date" class="form-control @error('buying_date') is-invalid @enderror" name="buying_date" value="{{ old('buying_date', $product->buying_date) }}" />
                                 @error('buying_date')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="expire_date">Expire Date</label>
-                                <input id="expire_date" class="form-control @error('expire_date') is-invalid @enderror" name="expire_date" value="{{ old('expire_date', $product->expire_date) }}" />
-                                @error('expire_date')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

@@ -58,25 +58,27 @@
                             <th>No.</th>
                             <th>Date</th>
                             <th>Transaction ID</th>
-                            <th>Product</th>
-                            <th>Quantity</th>
+                            {{-- <th>Product</th>  --}}
+                            {{-- <th>Quantity</th> --}}
                             <th>Amount</th>
+                            <th>Payment Method</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody class="ligth-body">
                         <!-- Sample data rows -->
                         <tr>
-                            <td>1</td>
+                            {{-- <td>1</td>
                             <td>2024-08-01</td>
                             <td>T0001</td>
                             <td>LPG Gas</td>
                             <td>10</td>
-                            <td>$150</td>
-                            <td>
-                                <div class="d-flex align-items-center list-action">
+                            <td>₱150</td>
+                            <td> --}}
+                                {{-- <div class="d-flex align-items-center list-action">
                                     <a class="badge badge-info mr-2" data-toggle="tooltip" data-placement="top" title="View" href="#"><i class="ri-eye-line mr-0"></i></a>
-                                </div>
+                                </div> --}}
                             </td>
                         </tr>
                         <!-- Repeat for other transactions -->

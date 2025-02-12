@@ -113,7 +113,7 @@
                             </div>
                         </li>
                         {{-- Experience --}}
-                        <li class="col-lg-12">
+                        {{-- <li class="col-lg-12">
                             <div class="form-group row">
                                 <div class="col-sm-3 col-4">
                                     <label class="col-form-label">Salary</label>
@@ -122,8 +122,8 @@
                                     <input type="text" class="form-control bg-white" value="${{ $employee->salary }}" readonly>
                                 </div>
                             </div>
-                        </li>
-                        <li class="col-lg-12">
+                        </li> --}}
+                        {{-- <li class="col-lg-12">
                             <div class="form-group row">
                                 <div class="col-sm-3 col-4">
                                     <label class="col-form-label">Vacation</label>
@@ -132,7 +132,7 @@
                                     <input type="text" class="form-control bg-white" value="{{ $employee->vacation }}" readonly>
                                 </div>
                             </div>
-                        </li>
+                        </li> --}}
                         <li class="col-lg-12">
                             <div class="form-group row">
                                 <div class="col-sm-3 col-4">
