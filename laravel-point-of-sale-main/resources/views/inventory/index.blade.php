@@ -72,6 +72,8 @@
                         <tr>
                             <th>Product Code</th>
                             <th>Product Name</th>
+                            <th>Category</th>
+                             {{-- <th>Supplier</th> --}}
                             <th>Quantity in Stock</th>
                             <th>Stock Status</th>
                             <th>Price per Unit</th>
