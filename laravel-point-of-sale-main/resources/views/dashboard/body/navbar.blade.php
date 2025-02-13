@@ -1,7 +1,7 @@
-{{-- @php
-    $notifications = \App\Models\Notification::where('is_read', false)->latest()->get();
+@php
+    
+    $products = \App\Models\Product::where('product_store', '<=', 10)->get();
 @endphp
- --}}
 
 
 
@@ -28,7 +28,24 @@
                     aria-label="Toggle navigation">
                     <i class="ri-menu-3-line"></i>
                 </button>
+{{-- //////////////////////////////////////////////////////// --}}
+<li class="nav-item dropdown">
+    <a class="nav-link" href="#" id="notificationsDropdown" role="button" data-toggle="dropdown">
+        <i class="fas fa-bell"></i>
+        <span id="notification-count" class="badge badge-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right">
+        <div id="notifications-list">
+            @foreach(auth()->user()->unreadNotifications as $notification)
+                <a class="dropdown-item notification-item" href="{{ route('notifications.read', $notification->id) }}">
+                    {{ $notification->message }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+</li>
 
+{{-- //////////////////////////////////                 --}}
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto navbar-list align-items-center">
                         <li class="nav-item nav-icon">
@@ -87,16 +104,23 @@
             </div>
             <div class="modal-body">
                 <!-- Notification content goes here -->
-                <ul class="list-group">
-                    @foreach($notifications as $notification)
-                    <li class="list-group-item">
-                        <a href="{{ route('inventory.index') }}" class="dropdown-item">
-                            {{ $notification->message }}
-                        </a>
-                    </li>
-                    
-                    @endforeach
-                </ul>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($products as $product)
+                        <tr>
+                            <td>{{$product->product_name}}</td>
+                            <td>{{$product->product_store}}</td>
+                        </tr>
+                        @endforeach
+
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -104,6 +128,15 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('.notification-item').click(function () {
+            var notificationCount = $('#notification-count').text();
+            notificationCount = notificationCount - 1;
+            $('#notification-count').text(notificationCount <= 0 ? '' : notificationCount);
+        });
+    });
+</script>
 
 <style>
     .nav-item .btn-light {

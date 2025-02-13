@@ -59,7 +59,32 @@ class ProductController extends Controller
             'suppliers' => Supplier::all(), 
         ]);
     }
-    
+
+    public function lowStockProducts()
+    {
+        $products = Product::where('product_store', '<=', 5)->get();
+        return view('dashboard.body.navbar', compact('products'));
+    }
+////////////////////////NEW 021325-------------------------------
+
+    public function checkStock($product)
+{
+    if ($product->stock_quantity <= $product->reorder_level) {
+        // Get all users (or filter for specific roles)
+        $users = User::all();
+
+        foreach ($users as $user) {
+            Notification::create([
+                'product_id' => $product->id,
+                'user_id' => $user->id,
+                'message' => "Low stock alert: {$product->product_name} is below reorder level.",
+                'is_read' => false,
+            ]);
+        }
+    }
+}
+
+///////////////////////////////////////---------------------------------------------
     /**
      * Show the form for creating a new resource.
      */
@@ -274,7 +299,7 @@ public function update(Request $request, $id)
         'supplier_id' => 'required|exists:suppliers,id',
         'selling_price' => 'required|numeric',
         'buying_price' => 'required|numeric',
-        'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
     ]);
     
 

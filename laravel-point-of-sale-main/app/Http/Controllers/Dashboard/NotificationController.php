@@ -26,13 +26,23 @@ class NotificationController extends Controller
 
 ////////////////////021225
 
-      public function markAsRead($id)
-    {
-        $notification = Auth::user()->notifications()->find($id);
+    //   public function markAsRead($id)
+    // {
+    //     $notification = Auth::user()->notifications()->find($id);
 
-        if ($notification) {
-            $notification->markAsRead();
-        }
+    //     if ($notification) {
+    //         $notification->markAsRead();
+    //     }
+
+    //     return redirect()->back();
+    // }
+
+
+    public function markAsRead($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->is_read = true;
+        $notification->save();
 
         return redirect()->back();
     }

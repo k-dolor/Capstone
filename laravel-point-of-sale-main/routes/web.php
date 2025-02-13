@@ -101,6 +101,7 @@ Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory
 
 
     // ====== PRODUCTS ======
+    Route::get('/lowStockProducts', [ProductController::class, 'lowStockProducts'])->name('products.lowStockProducts');
     Route::get('/products/import', [ProductController::class, 'importView'])->name('products.importView');
     Route::post('/products/import', [ProductController::class, 'importStore'])->name('products.importStore');
     Route::get('/products/export', [ProductController::class, 'exportData'])->name('products.exportData');
@@ -119,6 +120,7 @@ Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory
 
 Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
+Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 
     
    

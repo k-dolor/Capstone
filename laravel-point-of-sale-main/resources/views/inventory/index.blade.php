@@ -90,7 +90,7 @@
                             <td>
                                 @if ((int)$product->product_store <= 0)
                                     <span style="color: #ff0000; font-weight: bold; background-color: #f8d7da; padding: 8px 8px; border-radius: 5px;">No Stock</span>
-                                @elseif ((int)$product->product_store > 0 && (int)$product->product_store < 20)
+                                @elseif ((int)$product->product_store > 0 && (int)$product->product_store < 10)
                                     <span style="color: #694000; font-weight: bold; background-color: #ffe586; padding: 8px 8px; border-radius: 5px;">Low Stock</span>
                                 @else
                                     <span style="color: #002d13; font-weight: bold; background-color: #25d952a2; padding: 8px 8px; border-radius: 5px;">In Stock</span>

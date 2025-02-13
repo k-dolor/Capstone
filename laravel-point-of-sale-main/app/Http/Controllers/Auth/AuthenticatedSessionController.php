@@ -45,4 +45,9 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+
+    public function authenticated()
+{
+    Session::put('notifications_loaded', true);
+}
 }
