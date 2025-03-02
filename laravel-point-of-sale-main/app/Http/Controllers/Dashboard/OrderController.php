@@ -345,8 +345,20 @@ public function showInvoice($orderId)
 
 /////////////////////////////////////////////
 
-public function getOrderDetails($id)
-{
+// public function getOrderDetails($id)
+// {
+//     $order = Order::with('orderDetails.product')->find($id);
+    
+
+//     if (!$order) {
+//         return response()->json(['error' => 'Order not found'], 404);
+//     }
+
+//     return response()->json([
+//         'orderDetails' => $order->orderDetails
+//     ]);
+// }
+public function getOrderDetails($id) {
     $order = Order::with('orderDetails.product')->find($id);
 
     if (!$order) {
@@ -354,7 +366,15 @@ public function getOrderDetails($id)
     }
 
     return response()->json([
-        'orderDetails' => $order->orderDetails
+        'customer_name' => $order->customer_name,
+        'order_date' => $order->order_date,
+        'invoice_no' => $order->invoice_no,
+        'products' => $order->orderDetails->map(function($orderDetail) {
+            return [
+                'product_name' => optional($orderDetail->product)->product_name,
+                'quantity' => $orderDetail->quantity
+            ];
+        })
     ]);
 }
 

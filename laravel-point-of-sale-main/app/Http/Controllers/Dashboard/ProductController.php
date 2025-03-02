@@ -84,7 +84,7 @@ class ProductController extends Controller
     }
 }
 
-///////////////////////////////////////---------------------------------------------
+
     /**
      * Show the form for creating a new resource.
      */
@@ -291,17 +291,60 @@ class ProductController extends Controller
 
 //     return Redirect::route('products.index')->with('success', 'Product has been updated!');
 // }
+// public function update(Request $request, $id)
+// {
+//     $request->validate([
+//         'product_name' => 'required|string|max:255',
+//         'category_id' => 'required|exists:categories,id',
+//         'supplier_id' => 'required|exists:suppliers,id',
+//         'selling_price' => 'required|numeric',
+//         'buying_price' => 'required|numeric',
+//         'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+//     ]);
+    
+
+//     $product = Product::findOrFail($id);
+
+//     if ($request->hasFile('product_image')) {
+//         $file = $request->file('product_image');
+//         $fileName = hexdec(uniqid()).'.'.$file->getClientOriginalExtension();
+//         $path = 'public/products/';
+
+//         if($product->product_image){
+//                 Storage::delete($path . $product->product_image);
+//             }
+
+//         $file->storeAs($path, $fileName);
+//         $validatedData['product_image'] =  $fileName;
+        
+//     }
+
+//     $product->product_image = $validatedData['product_image'];
+//     $product->product_name = $request->product_name;
+//     $product->category_id = $request->category_id;
+//     $product->supplier_id = $request->supplier_id;
+//     $product->selling_price = $request->selling_price;
+//     $product->buying_price = $request->buying_price;
+
+    
+
+//     $product->save();
+
+//     return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+// }
+
 public function update(Request $request, $id)
 {
-    $request->validate([
+    $validatedData = $request->validate([
         'product_name' => 'required|string|max:255',
         'category_id' => 'required|exists:categories,id',
         'supplier_id' => 'required|exists:suppliers,id',
         'selling_price' => 'required|numeric',
         'buying_price' => 'required|numeric',
-        'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        // 'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+
     ]);
-    
 
     $product = Product::findOrFail($id);
 
@@ -310,28 +353,30 @@ public function update(Request $request, $id)
         $fileName = hexdec(uniqid()).'.'.$file->getClientOriginalExtension();
         $path = 'public/products/';
 
-        if($product->product_image){
-                Storage::delete($path . $product->product_image);
-            }
+        // Delete the old image if it exists
+        if ($product->product_image) {
+            Storage::delete($path . $product->product_image);
+        }
 
+        // Store the new file
         $file->storeAs($path, $fileName);
-        $validatedData['product_image'] =  $fileName;
-        
+
+        // Assign the new file name to the product
+        $product->product_image = $fileName;
     }
 
-    $product->product_image = $validatedData['product_image'];
-    $product->product_name = $request->product_name;
-    $product->category_id = $request->category_id;
-    $product->supplier_id = $request->supplier_id;
-    $product->selling_price = $request->selling_price;
-    $product->buying_price = $request->buying_price;
-
-    
+    // Update other product fields
+    $product->product_name = $validatedData['product_name'];
+    $product->category_id = $validatedData['category_id'];
+    $product->supplier_id = $validatedData['supplier_id'];
+    $product->selling_price = $validatedData['selling_price'];
+    $product->buying_price = $validatedData['buying_price'];
 
     $product->save();
 
     return redirect()->route('products.index')->with('success', 'Product updated successfully.');
 }
+
 
 
 

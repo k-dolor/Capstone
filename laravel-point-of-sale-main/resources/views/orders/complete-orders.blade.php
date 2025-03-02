@@ -148,7 +148,7 @@ thead th {
     background-color: #0173ba !important;
     color: #fff !important;
     border: none;
-    border-radius: 3px !important;
+    border-radius: 5px !important;
     padding: 5px 10px !important;
     transition: background-color 0.3s ease !important;
 }   
@@ -161,7 +161,7 @@ thead th {
     background-color: #ff8800 !important;
     color: #fff !important;
     border: none;
-    border-radius: 3px !important;
+    border-radius: 5px !important;
     padding: 5px 10px !important;
     transition: background-color 0.3s ease !important;
 }   
@@ -223,7 +223,7 @@ thead th {
                             <th>Customer</th>
                             <th>@sortablelink('total', 'Total')</th>
                             <th>Payment Type</th>
-                            <th>Status</th>
+                            {{-- <th>Status</th> --}}
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -235,9 +235,9 @@ thead th {
                             <td>{{ $order->customer_name }}</td>
                             <td>{{ $order->total }}</td>
                             <td>{{ $order->payment_status }}</td>
-                            <td>
+                            {{-- <td>
                                 <span class="badge badge-status">{{ $order->order_status }}</span>
-                            </td>
+                            </td> --}}
                             <td>
                                 <button type="button" class="btn btn-custom-actions" data-bs-toggle="modal" data-bs-target="#orderDetailsModal{{ $order->id }}">
                                     Details
@@ -261,7 +261,20 @@ thead th {
                                         <p><strong>Payment Status:</strong> {{ $order->payment_status }}</p>
                                         <p><strong>Paid Amount:</strong> {{ $order->pay }}</p>
                                         <p><strong>Due Amount:</strong> {{ $order->due }}</p>
+                                    
+                                        <!-- Fetch Products and Quantities -->
+                                        <h5><strong>Products Ordered:</strong></h5>
+                                        <ul>
+                                            @foreach ($order->orderDetails as $detail)
+                                                <li>
+                                                    <strong>Product:</strong> {{ $detail->product->product_name }} 
+                                                    - <strong>Quantity:</strong> {{ $detail->quantity }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
                                     </div>
+                                    
+                                    
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     </div>

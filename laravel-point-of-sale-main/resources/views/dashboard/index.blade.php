@@ -20,7 +20,7 @@
         <div class="col-lg-12">
             <div class="card card-transparent card-stretch card-height border-none">
                 <div class="card-body p-2">
-                    <h3 class="mb-2">Good Day, {{ auth()->user()->name }}</h3>
+                    <h3 class="mb-2">Good Day, {{ auth()->user()->name }}!</h3>
                     <p class="mb-0">Welcome to L&N Supply Management System.</p>
                 </div>
             </div>

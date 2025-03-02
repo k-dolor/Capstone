@@ -14,8 +14,39 @@
                     <a href="{{ route('pos.index') }}" class="btn clear-btn">Clear</a>
                 </form>              
             </div>
-            <!-- Product Grid with Scrollable Container -->
-            <div class="product-grid-container">
+
+             <!-- Product Grid with Scrollable Container -->
+                <div class="product-grid-container">
+                    <div class="row g-0"> <!-- Use 'g-0' to remove grid gap -->
+                        @forelse ($products as $product)
+                        <div class="col-md-4 px-2">
+                            <div class="card product-card text-center clickable-card" data-id="{{ $product->id }}" data-name="{{ $product->product_name }}" data-price="{{ $product->selling_price }}">
+                                <div class="position-relative">
+                                    <img src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/logo3.png') }}" 
+                                        class="card-img-top" 
+                                        alt="{{ $product->product_name }}" 
+                                        style="object-fit: contain; width: 100%; height: 150px;">
+                                    <div class="position-absolute bottom-0 start-0 w-100 p-2 text-white bg-dark bg-opacity-75">
+                                        <h6 class="m-0">{{ $product->product_name }}</h6>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h4>₱ {{ $product->selling_price }}</h4>
+                                </div>
+                            </div>                    
+                        </div>
+                        @empty
+                        <div class="alert alert-danger" role="alert">
+                            <strong>No Products Found.</strong>
+                        </div>
+                        @endforelse
+                    </div>
+                    {{ $products->links() }}
+                </div>
+            </div>
+
+          <!-- Product Grid with Scrollable OLD VER Container -->
+            {{-- <div class="product-grid-container">
                 <div class="row g-0"> <!-- Use 'g-0' to remove grid gap -->
                     @forelse ($products as $product)
                     <div class="col-md-4 px-2">
@@ -36,7 +67,7 @@
                                     <input type="hidden" name="id" value="{{ $product->id }}">
                                     <input type="hidden" name="name" value="{{ $product->product_name }}">
                                     <input type="hidden" name="price" value="{{ $product->selling_price }}">
-                                    <button class="btn">Add</button>
+                                    <button class="btn-">₱ {{ $product->selling_price }}</button>
                                 </form>
                             </div>
                         </div>                    
@@ -49,19 +80,19 @@
                 </div>
                 {{ $products->links() }}
             </div>
-        </div>
+        </div> --}}
 
         <!-- Right Column: Cart and Invoice -->
         <div class="col-lg-5 col-md-12">
-            <div class="card invoice-card">
+            <div class="card invoice-card" style="height: 620px; display: flex; flex-direction: column; background-color: #f8f9fa;">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">Invoice</h5>
                 </div>
-                <div class="card-body" style="max-width: 100%; overflow-x: auto; padding: 15px;">
+                <div class="card-body" style="flex-grow: 1; overflow-y: auto; padding: 15px;">
                     <form>
-                        <table class="table table-bordered" style="width: 100%; table-layout: fixed; font-size:14px; border-spacing: 0 !important; padding: 5px;">
+                        <table class="table table-bordered" style="width: 100%; table-layout: fixed; font-size:14px;">
                             <thead>
-                                <tr>
+                                <tr style="background-color: #343a40; color: rgb(33, 32, 32);">
                                     <th>Items</th>
                                     <th>Qty</th>
                                     <th>Price</th>
@@ -77,13 +108,13 @@
                                         <form action="{{ route('pos.updateCart', $item->rowId) }}" method="POST">
                                             @csrf
                                             <input type="number" class="form-control" name="qty" required value="{{ old('qty', $item->qty) }}">
-                                            <button type="submit" class="btn btn-success btn-sm">Update</button>
+                                            <button type="submit" class="btn btn-success btn-sm mt-1">Update</button>
                                         </form>                                                                            
                                     </td>
                                     <td>₱{{ $item->price }}</td>
                                     <td>₱{{ $item->subtotal }}</td>
                                     <td>
-                                        <a href="{{ route('pos.deleteCart', $item->rowId) }}" class="btn btn-danger btn-sm" >
+                                        <a href="{{ route('pos.deleteCart', $item->rowId) }}" class="btn btn-danger btn-sm">
                                             Delete
                                         </a>
                                     </td>
@@ -91,23 +122,23 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="text-right">
-                            <p><strong>Subtotal: </strong>{{ Cart::subtotal() }}</p>
-                            <p><strong>Tax: </strong>{{ Cart::tax() }}</p>
-                        </div>
-                        <div class="text-end">
-                            <p><strong>Total Amount:</strong> <span class="text-danger">₱{{ Cart::total() }}</span></p>
-                        </div>   
-                          <!-- Create Invoice and Payment Modal Trigger Button -->
-                          <button type="button" class="btn btn-custom btn-block" data-toggle="modal" data-target="#createInvoiceModal">
-                            Create Invoice
-                        </button>                        
                     </form>
+                </div>
+                <div class="card-footer" style="background-color: #343a40; color: white; padding: 10px;">
+                    <div class="text-right">
+                        <p><strong>Subtotal: </strong>₱{{ Cart::subtotal() }}</p>
+                        <p><strong>Tax: </strong>₱{{ Cart::tax() }}</p>
+                    </div>
+                    <div class="text-end">
+                        <p><strong>Total Amount:</strong> <span style="color: #ffcc00; font-size: 22px;">₱{{ Cart::total() }}</span></p>
+                    </div>
+                    <button type="button" class="btn btn-custom btn-block" data-toggle="modal" data-target="#createInvoiceModal">
+                        Create Invoice
+                    </button>  
                 </div>
             </div>
         </div>
-    </div>
-</div>
+        
 
 <!-- Modal for Creating Invoice and Payment -->
 <div class="modal fade" id="createInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="createInvoiceModalLabel" aria-hidden="true">
@@ -240,6 +271,53 @@
     var changeAmount = payAmount - totalAmount;
     document.getElementById("change").value = "₱" + changeAmount.toFixed(2);
 }
+
+// NEWWW HAHAHAH
+
+document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".clickable-card").forEach(card => {
+            card.addEventListener("click", function() {
+                // Create a form dynamically
+                let form = document.createElement("form");
+                form.method = "POST";
+                form.action = "{{ route('pos.addCart') }}";
+
+                // CSRF Token
+                let csrfInput = document.createElement("input");
+                csrfInput.type = "hidden";
+                csrfInput.name = "_token";
+                csrfInput.value = "{{ csrf_token() }}";
+                form.appendChild(csrfInput);
+
+                // Product ID
+                let idInput = document.createElement("input");
+                idInput.type = "hidden";
+                idInput.name = "id";
+                idInput.value = this.getAttribute("data-id");
+                form.appendChild(idInput);
+
+                // Product Name
+                let nameInput = document.createElement("input");
+                nameInput.type = "hidden";
+                nameInput.name = "name";
+                nameInput.value = this.getAttribute("data-name");
+                form.appendChild(nameInput);
+
+                // Product Price
+                let priceInput = document.createElement("input");
+                priceInput.type = "hidden";
+                priceInput.name = "price";
+                priceInput.value = this.getAttribute("data-price");
+                form.appendChild(priceInput);
+
+                // Append form to body and submit
+                document.body.appendChild(form);
+                form.submit();
+            });
+        });
+    });
+
+    // CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 
     function applyDiscount() {
@@ -402,7 +480,7 @@
 
 /* Make the product grid scrollable and keep search bar + category outside */
 .product-grid-container {
-    max-height: 550px; /* Limit the height of the grid */
+    max-height: 500px; /* Limit the height of the grid */
     overflow-y: auto; /* Enable vertical scrolling */
     padding-right: 10px; /* Adjust for the scrollbar */
 }
@@ -457,7 +535,7 @@
     border: none;
     font-size: 14px !important; /* Adjust font size */
     color: white !important;
-    padding: 5px 15px !important; /* Adjust padding (height and width) */
+    padding: 5px 10px !important; /* Adjust padding (height and width) */
     border-radius: 3px !important; /* Adjust border radius if needed */
 }
 

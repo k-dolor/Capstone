@@ -1,13 +1,15 @@
 @php
-    
+    $notifications = \App\Models\Notification::where('is_read', false)->latest()->get();
     $products = \App\Models\Product::where('product_store', '<=', 10)->get();
 @endphp
 
 
 
 
-<div class="iq-top-navbar" style="background-color:  #281e32;">
-    <div class="iq-navbar-custom" style="background-color:  #281e32;">
+{{-- <div class="iq-top-navbar" style="background-color:  #281e32;">
+    <div class="iq-navbar-custom" style="background-color:  #281e32;"> --}}
+        <div class="iq-top-navbar" style="background-color:  #df7204;">
+            <div class="iq-navbar-custom" style="background-color:  #df7204;">
         <nav class="navbar navbar-expand-lg navbar-light p-0">
             <div class="iq-navbar-logo d-flex align-items-center justify-content-between">
                 <i class="ri-menu-line wrapper-menu"></i>
@@ -28,24 +30,7 @@
                     aria-label="Toggle navigation">
                     <i class="ri-menu-3-line"></i>
                 </button>
-{{-- //////////////////////////////////////////////////////// --}}
-<li class="nav-item dropdown">
-    <a class="nav-link" href="#" id="notificationsDropdown" role="button" data-toggle="dropdown">
-        <i class="fas fa-bell"></i>
-        <span id="notification-count" class="badge badge-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
-    </a>
-    <div class="dropdown-menu dropdown-menu-right">
-        <div id="notifications-list">
-            @foreach(auth()->user()->unreadNotifications as $notification)
-                <a class="dropdown-item notification-item" href="{{ route('notifications.read', $notification->id) }}">
-                    {{ $notification->message }}
-                </a>
-            @endforeach
-        </div>
-    </div>
-</li>
 
-{{-- //////////////////////////////////                 --}}
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto navbar-list align-items-center">
                         <li class="nav-item nav-icon">
@@ -128,15 +113,6 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('.notification-item').click(function () {
-            var notificationCount = $('#notification-count').text();
-            notificationCount = notificationCount - 1;
-            $('#notification-count').text(notificationCount <= 0 ? '' : notificationCount);
-        });
-    });
-</script>
 
 <style>
     .nav-item .btn-light {

@@ -70,12 +70,13 @@
                 <table class="table table-bordered table-striped">
                     <thead style="background-color: #dfe3e8;">
                         <tr>
-                            <th>Product Code</th>
+                            <th>Code</th>
                             <th>Product Name</th>
+                            <th>Image</th>
                             <th>Category</th>
                              {{-- <th>Supplier</th> --}}
-                            <th>Quantity in Stock</th>
-                            <th>Stock Status</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
                             <th>Price per Unit</th>
                             <th>Total Value</th>
                             <th>Actions</th>
@@ -86,6 +87,13 @@
                         <tr style="background-color: #f9f9f9;">
                             <td>{{ $product->product_code }}</td>
                             <td>{{ $product->product_name }}</td>
+                            <td>
+                                <img class="product-image" 
+                                     src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.jpg') }}" 
+                                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 10px; border: 2px solid #ccc;">
+                            </td>
+                            
+                            <td>{{ $product->category->name }}</td>
                             <td>{{ $product->product_store }}</td>
                             <td>
                                 @if ((int)$product->product_store <= 0)

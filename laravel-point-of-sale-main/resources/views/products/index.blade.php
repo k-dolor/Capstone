@@ -70,7 +70,7 @@
                 </div>
             </form>
         </div>
-
+{{-- TABLE IN THE INDEX--}}
         <div class="col-lg-12">
             <div class="card">
                 </div>
@@ -122,7 +122,8 @@
                                                  data-supplier="{{ $product->supplier_id }}"
                                                  data-buying-price="{{ $product->buying_price }}"
                                                  data-selling-price="{{ $product->selling_price }}"
-                                                 data-image="{{ $product->product_image ? asset('storage/products/' . $product->product_image) : asset('assets/images/product/default.webp') }}"
+                                                   data-image="{{ asset('storage/products/'.$product->product_image) }}"
+                                                 {{-- data-image="{{ $product->product_image ? asset('storage/products/' . $product->product_image) : asset('assets/images/product/default.webp') }}" --}}
                                                  data-toggle="modal" 
                                                  data-target="#editProductModal">
                                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -209,88 +210,11 @@
         </div>
     </div>
 
-    {{-- Product Edit Modal  ===============================--}}
-    
-  <!-- Edit Product Modal ------OLD------>
-  {{-- <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-                <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('put')
-                    <input type="hidden" id="editProductId" name="product_id"> 
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Form fields -->
-                    <!-- Image Preview -->
-                    <div class="form-group text-center">
-                        <label>Product Image</label>
-                        <div>
-                            <img id="editProductImagePreview" class="crm-profile-pic rounded-circle avatar-100"
-                                 src="{{ asset('assets/images/product/default.webp') }}"
-                                 alt="product-image" 
-                                 style="max-height: 150px; border: 1px solid #ccc; padding: 5px;">
-                        </div>
-                    <!-- Image Upload -->
-                    <div class="form-group">
-                        <label for="editProductImage">Change Image</label>
-                        <input type="file" class="form-control-file" id="editProductImage" name="product_image" accept="image/*">
-                    </div>
-                </div>
-                    <div class="form-group">
-                        <label for="editProductName">Product Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('product_name') is-invalid @enderror" id="editProductName" name="product_name" required>
-                    </div>
-                    <!-- Category -->
-                    <div class="form-group">
-                        <label for="editProductCategory">Category <span class="text-danger">*</span></label>
-                        <select class="form-control" id="editProductCategory" name="category_id" required>
-                            <option selected disabled>-- Select Category --</option>
-                            @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>                    
-                    </div>
-                    <!-- Supplier -->
-                    <div class="form-group">
-                        <label for="editProductSupplier">Supplier <span class="text-danger">*</span></label>
-                        <select class="form-control" id="editProductSupplier" name="supplier_id" required>
-                            <option selected disabled>-- Select Supplier --</option>
-                            @foreach ($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <!-- Buying Price -->
-                    <div class="form-group">
-                        <label for="editBuyingPrice" class="form-label">Buying Price</label>
-                        <input type="number" id="editBuyingPrice" name="buying_price" class="form-control" step="0.01" required>
-                    </div>
-                    <!-- Selling Price -->
-                    <div class="form-group">
-                        <label for="editProductPrice">Selling Price</label>
-                        <input type="number" class="form-control" id="editProductPrice" name="selling_price" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> --}}
-
 <!-- Edit Product Modal -->
-<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+{{-- <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+                <div class="modal-header bg-info text-white">
                 <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -303,8 +227,7 @@
                     <input type="hidden" id="edit_product_id" name="id">
 
                     <div class="form-group">
-                        {{-- <label for="edit_product_image">Product Image</label> --}}
-                        {{-- <img id="edit_product_preview" src="" alt="Product Image" class="img-fluid" width="100"> --}}
+                       
                         <img class="crm-profile-pic rounded-circle avatar-100" id="image-preview" src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.webp') }}" alt="product_image">
                     </div>
                     <div class="input-group mb-4 col-lg-6">
@@ -350,23 +273,6 @@
                         <label for="edit_selling_price">Selling Price</label>
                         <input type="number" class="form-control" id="edit_selling_price" name="selling_price" required>
                     </div>
-
-                    {{-- <div class="form-group">
-                        {{-- <label for="edit_product_image">Product Image</label> --}}
-                        {{-- <img id="edit_product_preview" src="" alt="Product Image" class="img-fluid" width="100"> --}}
-                        {{-- <img class="crm-profile-pic rounded-circle avatar-100" id="image-preview" src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.webp') }}" alt="product_image">
-                    </div> --}} 
-                    {{-- <div class="input-group mb-4 col-lg-6">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input @error('product_image') is-invalid @enderror" id="image" name="product_image" accept="image/*" onchange="previewImage();">
-                            <label class="custom-file-label" for="product_image">Choose file</label>
-                        </div>
-                        @error('product_image')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -375,7 +281,137 @@
             </form>
         </div>
     </div>
+</div> --}}
+
+<!-- Edit Product Modal -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editProductForm" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="modal-body">
+                    <input type="hidden" id="edit_product_id" name="id">
+                    
+                    <div class="row">
+                        <!-- Left Side: Product Image -->
+                        <div class="col-md-4 text-center">
+                            <div class="form-group">
+                                    <img id="image-preview" 
+                                    src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.webp') }}"
+                                    alt="product_image" class="img-fluid rounded"
+                                        style="width: 200px; height: 200px; object-fit: cover; border: 2px solid #ccc; margin-bottom: 10px;">
+
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="product_image" name="product_image" accept="image/*" onchange="previewImage(event);">
+                                    <label class="custom-file-label" for="product_image">Choose file</label>
+                                </div>
+                                @error('product_image')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- <!-- Right Side: Product Details -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="edit_product_name">Product Name</label>
+                                <input type="text" class="form-control" id="edit_product_name" name="product_name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_category">Category</label>
+                                <select class="form-control" id="edit_category" name="category_id">
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_supplier">Supplier</label>
+                                <select class="form-control" id="edit_supplier" name="supplier_id">
+                                    @foreach($suppliers as $supplier)
+                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_buying_price">Buying Price</label>
+                                <input type="number" class="form-control" id="edit_buying_price" name="buying_price" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit_selling_price">Selling Price</label>
+                                <input type="number" class="form-control" id="edit_selling_price" name="selling_price" required>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
+                <!-- Right Side: Product Details -->
+                    <div class="col-md-8">
+                        <div class="form-group row">
+                            <label for="edit_product_name" class="col-sm-4 col-form-label text-right">Product Name:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="edit_product_name" name="product_name" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="edit_category" class="col-sm-4 col-form-label text-right">Category:</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="edit_category" name="category_id">
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="edit_supplier" class="col-sm-4 col-form-label text-right">Supplier:</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="edit_supplier" name="supplier_id">
+                                    @foreach($suppliers as $supplier)
+                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="edit_buying_price" class="col-sm-4 col-form-label text-right">Buying Price:</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" id="edit_buying_price" name="buying_price" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="edit_selling_price" class="col-sm-4 col-form-label text-right">Selling Price:</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" id="edit_selling_price" name="selling_price" required>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
 
     
                 
@@ -438,6 +474,25 @@ $(document).ready(function () {
 
         $("#editProductForm").attr("action", "/products/update/" + id);
     });
+});
+
+
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById("image-preview");
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result; // Set new image source
+            };
+            reader.readAsDataURL(input.files[0]); // Convert to base64 string
+        }
+    }
+
+    $('.edit-product-btn').on('click', function() {
+    let imageUrl = $(this).data('image');
+    $('#image-preview').attr('src', imageUrl);
 });
 
 

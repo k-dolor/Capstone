@@ -197,11 +197,11 @@ public function exportSales(Request $request)
     if ($request->has('stock_filter')) {
         $filter = $request->stock_filter;
         if ($filter === 'low_stock') {
-            $query->where('product_store', '>', 0)->where('product_store', '<', 20);
+            $query->where('product_store', '>', 0)->where('product_store', '<', 10);
         } elseif ($filter === 'out_of_stock') {
             $query->where('product_store', '<=', 0);
         } elseif ($filter === 'in_stock') {
-            $query->where('product_store', '>=', 20);
+            $query->where('product_store', '>=', 10);
         }
     }
 

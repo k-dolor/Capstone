@@ -146,6 +146,8 @@ Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRe
     // ====== ORDERS ======
     Route::get('/orders/complete', [OrderController::class, 'completeOrders'])->name('order.completeOrders');
     Route::get('/orders/details/{order_id}', [OrderController::class, 'orderDetails'])->name('order.orderDetails');
+    Route::get('/orders/{id}/details', [OrderController::class, 'getOrderDetails']);
+
     Route::get('/invoice/{order_id}', [OrderController::class, 'showInvoice'])->name('invoice.show');
     Route::get('/orders/invoice/download/{order_id}', [OrderController::class, 'invoiceDownload'])->name('order.invoiceDownload');
     Route::get('/orders/{id}', [OrderController::class, 'getOrderDetails']);
