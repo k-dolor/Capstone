@@ -162,11 +162,27 @@ Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRe
     // Stock Management
     Route::get('/stock', [OrderController::class, 'stockManage'])->name('order.stockManage');
 
+    // // ====== DATABASE BACKUP ======
+    // Route::get('/database/backup', [DatabaseBackupController::class, 'index'])->name('backup.index');
+    // Route::get('/database/backup/now', [DatabaseBackupController::class, 'create'])->name('backup.create');
+    // Route::get('/database/backup/download/{getFileName}', [DatabaseBackupController::class, 'download'])->name('backup.download');
+    // Route::get('/database/backup/delete/{getFileName}', [DatabaseBackupController::class, 'delete'])->name('backup.delete');
     // ====== DATABASE BACKUP ======
-    Route::get('/database/backup', [DatabaseBackupController::class, 'index'])->name('backup.index');
-    Route::get('/database/backup/now', [DatabaseBackupController::class, 'create'])->name('backup.create');
-    Route::get('/database/backup/download/{getFileName}', [DatabaseBackupController::class, 'download'])->name('backup.download');
-    Route::get('/database/backup/delete/{getFileName}', [DatabaseBackupController::class, 'delete'])->name('backup.delete');
+Route::get('/database/backup', [DatabaseBackupController::class, 'index'])->name('backup.index');
+Route::get('/database/backup/now', [DatabaseBackupController::class, 'create'])->name('backup.create');
+Route::get('/database/backup/download/{filename}', [DatabaseBackupController::class, 'download'])->name('backup.download');
+Route::get('/database/backup/delete/{filename}', [DatabaseBackupController::class, 'delete'])->name('backup.delete');
+Route::get('/database/download/{filename}', [DatabaseBackupController::class, 'download'])->name('database.download');
+Route::get('/database/download/{filename}', [DatabaseBackupController::class, 'download'])->name('database.download');
+Route::delete('/database/delete/{filename}', [DatabaseBackupController::class, 'delete'])->name('database.delete');
+Route::delete('/database/delete/{filename}', [DatabaseBackupController::class, 'delete'])->name('backup.delete');
+
+Route::get('/backup/create', [DatabaseBackupController::class, 'create'])->name('backup.create');
+
+Route::get('/database-backups', [DatabaseBackupController::class, 'index'])->name('backup.index');
+
+
+
 
     // ====== ROLE CONTROLLER ======
     // Permissions
