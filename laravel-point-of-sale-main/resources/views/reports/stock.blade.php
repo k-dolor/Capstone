@@ -4,15 +4,23 @@
 
 <div class="container-fluid">
     <!-- Title -->
-    <h1 class="text-center mb-4" style="font-family: 'Poppins', sans-serif;">Reports & Analytics</h1>
+    <h1 class="text-center mb-4 no-print" style="font-family: 'Poppins', sans-serif;">Reports & Analytics</h1>
 
     <!-- Tab Navigation -->
-    <div class="d-flex justify-content-center mb-4">
+    {{-- <div class="d-flex justify-content-center mb-4">
         <a href="{{ route('reports.index') }}" class="btn mx-2" style="background-color: #FB8500; color: #ffffff; border: none;">Main Page</a>
         <a href="{{ route('reports.sales') }}" class="btn mx-2" style="background-color: #B0E0E6; color: #000; border: none;">Sales Report</a>
         <a href="{{ route('reports.stock') }}" class="btn mx-2" style="background-color: #4682B4; color: #fff; border: none;">Stock Report</a>
         <a href="{{ route('reports.income') }}" class="btn mx-2" style="background-color: #1E90FF; color: #fff; border: none;">Income Report</a>
         <a href="{{ route('reports.products') }}" class="btn mx-2" style="background-color: #003459; color: #fff; border: none;">Products Report</a>
+    </div> --}}
+     <!-- Tab Navigation -->
+     <div class="d-flex justify-content-center mb-4">
+        <a href="{{ route('reports.index') }}" class="btn report-tab no-print">Main Page</a>
+        <a href="{{ route('reports.sales') }}" class="btn report-tab no-print">Sales Report</a>
+        <a href="{{ route('reports.stock') }}" class="btn report-tab active no-print">Stock Report</a>
+        <a href="{{ route('reports.income') }}" class="btn report-tab no-print ">Income Report</a>
+        <a href="{{ route('reports.products') }}" class="btn report-tab no-print">Products Report</a>
     </div>
 
     <div class="row">
@@ -24,8 +32,8 @@
                 
                 <div>
                     <!-- Stock Filter -->
-                    <form action="{{ route('reports.stock') }}" method="GET" class="form-inline">
-                        <select name="stock_filter" class="form-control" style="height: 38px;border-radius: 1px;">
+                    <form action="{{ route('reports.stock') }}" method="GET" class="form-inline no-print">
+                        <select name="stock_filter" class="form-control no-print" style="height: 38px;border-radius: 1px;">
                             <option value="">All Stock</option>
                             <option value="in_stock" @if(request('stock_status') == 'in_stock') selected @endif>In Stock</option>
                             <option value="low_stock" @if(request('stock_status') == 'low_stock') selected @endif>Low Stock</option>
@@ -37,8 +45,8 @@
 
             <!-- Print and Export Buttons -->
             <div style="display: flex; gap: 0;">
-                <button class="btn" style="background-color: #3a33ff; color: white;height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center; border-radius: 1px;" onclick="window.print()">Print</button>
-                <a href="{{ route('sales.exportData', ['filter' => request('filter')]) }}" class="btn btn-primary" style="background-color: #ff8400; height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center;border-radius: 1px;">Export</a>
+                <button class="btn no-print" style="background-color: #3a33ff; color: white;height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center; border-radius: 1px;" onclick="window.print()">Print</button>
+                <a href="{{ route('sales.exportData', ['filter' => request('filter')]) }}" class="btn btn-primary no-print" style="background-color: #ff8400; height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center;border-radius: 1px;">Export</a>
             </div>
         </div>
 
@@ -83,6 +91,34 @@
 </div>
 
 <style>
+     @media print {
+        .no-print {
+            display: none !important;
+        }
+    }
+
+.report-tab {
+        background-color: #1E90FF;
+        color: white;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 15px;
+        margin: 5px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .report-tab:hover {
+        background-color: #004080;
+        transform: scale(1.05);
+        color: white;
+    }
+
+    .report-tab.active {
+        background-color: #003459;
+    }
+
+
+
     .btn {
         font-family: 'Poppins', sans-serif;
         border-radius: 30px;

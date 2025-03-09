@@ -48,6 +48,10 @@ Route::get('/', function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
     Route::get('/sales-chart', [SalesController::class, 'showSalesChart']);
+    Route::get('/dashboard/sales-revenue', [DashboardController::class, 'getSalesRevenueData'])->name('dashboard.sales_revenue');
+
+Route::get('/dashboard/sales-revenue', [DashboardController::class, 'getSalesRevenueData']);
+
 
 
     // ====== USERS ====
@@ -121,6 +125,8 @@ Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory
 Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
 Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+Route::post('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
 
     
    

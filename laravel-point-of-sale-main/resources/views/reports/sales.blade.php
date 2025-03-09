@@ -4,15 +4,23 @@
 
 <div class="container-fluid">
      <!-- Title -->
-     <h1 class="text-center mb-4" style="font-family: 'Poppins', sans-serif;">Reports & Analytics</h1>
+     <h1 class="text-center mb-4 no-print" style="font-family: 'Poppins', sans-serif;">Reports & Analytics</h1>
 
     <!-- Tab Navigation -->
-    <div class="d-flex justify-content-center mb-4">
+    {{-- <div class="d-flex justify-content-center mb-4">
         <a href="{{ route('reports.index') }}" class="btn mx-2" style="background-color: #FB8500; color: #ffffff; border: none;">Main Page</a> <!-- Powder Blue -->
         <a href="{{ route('reports.sales') }}" class="btn mx-2" style="background-color: #B0E0E6; color: #000; border: none;">Sales Report</a> <!-- Light Sky Blue -->
         <a href="{{ route('reports.stock') }}" class="btn mx-2" style="background-color: #4682B4; color: #fff; border: none;">Stock Report</a> <!-- Steel Blue -->
         <a href="{{ route('reports.income') }}" class="btn mx-2" style="background-color: #1E90FF; color: #fff; border: none;">Income Report</a> <!-- Dodger Blue -->
         <a href="{{ route('reports.products') }}" class="btn mx-2" style="background-color: #003459; color: #fff; border: none;">Products Report</a> <!-- Dark Blue -->
+    </div> --}}
+     <!-- Tab Navigation -->
+     <div class="d-flex justify-content-center mb-4">
+        <a href="{{ route('reports.index') }}" class="btn report-tab no-print">Main Page</a>
+        <a href="{{ route('reports.sales') }}" class="btn report-tab active no-print">Sales Report</a>
+        <a href="{{ route('reports.stock') }}" class="btn report-tab no-print">Stock Report</a>
+        <a href="{{ route('reports.income') }}" class="btn report-tab no-print ">Income Report</a>
+        <a href="{{ route('reports.products') }}" class="btn report-tab no-print">Products Report</a>
     </div>
 
     <div class="row">
@@ -23,8 +31,8 @@
 
 
        <!-- Centered Filter Form -->
-    <div class="d-flex flex-grow-1 justify-content-center">
-        <form action="{{ route('reports.sales') }}" method="GET" class="d-flex gap-3 flex-wrap">
+    <div class="d-flex flex-grow-1 justify-content-center no-print">
+        <form action="{{ route('reports.sales') }}" method="GET" class="d-flex gap-3 flex-wrap no-print">
             <div style="display: flex; gap: 5px;">
                 <label for="filter" style="white-space: nowrap;">Filter by:</label>
                 <select name="filter" id="filter" class="form-select" style="height: 38px; width: 140px; padding: 5px 10px; font-size: 14px; border-radius: 0px; border: 1px solid #ccc;">
@@ -39,7 +47,7 @@
             </div>
 
             <!-- Specific Day Input -->
-            <div class="filter-group" id="specificDayInput" style="display: none; margin-left: 10px;">
+            <div class="filter-group no-print" id="specificDayInput" style="display: none; margin-left: 10px;">
               <div class="d-flex align-items-center">
                  <label for="specific_day" class="form-label me-2">Select Day:</label>
                   <input type="date" name="specific_day" id="specific_day" class="form-control" style="margin-left: 5px;" value="{{ request('specific_day') }}">
@@ -47,7 +55,7 @@
             </div>
 
             <!-- Specific Week Input -->
-            <div class="filter-group" id="specificWeekInput" style="display: none; margin-left: 10px;">
+            <div class="filter-group no-print" id="specificWeekInput" style="display: none; margin-left: 10px;">
               <div class="d-flex align-items-center">
                   <label for="specific_week" class="form-label me-2">Select Week:</label>
                    <input type="week" name="specific_week" id="specific_week" class="form-control" style="margin-left: 5px;" value="{{ request('specific_week') }}">
@@ -55,7 +63,7 @@
             </div>
 
             <!-- Specific Month Input -->
-            <div class="filter-group" id="specificMonthInput" style="display: none; margin-left: 10px;">
+            <div class="filter-group no-print" id="specificMonthInput" style="display: none; margin-left: 10px;">
                 <div class="d-flex align-items-center">
                  <label for="specific_month" class="form-label me-2">Select Month:</label>
                   <input type="month" name="specific_month" id="specific_month" class="form-control" style="margin-left: 5px;" value="{{ request('specific_month') }}">
@@ -64,7 +72,7 @@
                  
             <!-- Search Button -->
             <div style="display: flex; gap: 0;">
-                <button type="submit" class="btn btn-primary" style="height: 38px; padding: 0 10px; font-size: 14px; border-radius: 0px;">Filter</button>
+                <button type="submit" class="btn btn-primary no-print" style="height: 38px; padding: 0 10px; font-size: 14px; border-radius: 0px;">Filter</button>
                 <a href="{{ route('reports.sales') }}" class="btn btn-secondary" style="height: 38px; padding: 0 20px; font-size: 14px; border-radius: 0px; display: flex; align-items: center; justify-content: center;">Clear</a>
             </div>
             
@@ -73,8 +81,8 @@
 
         <!-- Print and Export Buttons -->
 <div style="display: flex; gap: 0;">
-     <button class="btn" style="background-color: #3a33ff; color: white;height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center; border-radius: 1px;" onclick="window.print()">Print</button>
-    <a href="{{ route('sales.exportData', ['filter' => request('filter'), 'specific_day' => request('specific_day'), 'specific_week' => request('specific_week'), 'specific_month' => request('specific_month')]) }}" class="btn btn-primary" style="background-color: #ff8400; height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center;border-radius: 1px;">Export</a>
+     <button class="btn no-print" style="background-color: #3a33ff; color: white;height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center; border-radius: 1px;" onclick="window.print()">Print</button>
+    <a href="{{ route('sales.exportData', ['filter' => request('filter'), 'specific_day' => request('specific_day'), 'specific_week' => request('specific_week'), 'specific_month' => request('specific_month')]) }}" class="btn btn-primary no-print" style="background-color: #ff8400; height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center;border-radius: 1px;">Export</a>
 </div>
 
 </div>
@@ -173,6 +181,34 @@
 </script>
 
 <style>
+     @media print {
+        .no-print {
+            display: none !important;
+        }
+    }
+
+.report-tab {
+        background-color: #1E90FF;
+        color: white;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 15px;
+        margin: 5px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .report-tab:hover {
+        background-color: #004080;
+        transform: scale(1.05);
+        color: white;
+    }
+
+    .report-tab.active {
+        background-color: #003459;
+    }
+
+
+
 /* Consistent Styles */
 .form-select,
 #specific_day, #specific_week, #specific_month {

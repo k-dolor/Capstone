@@ -3,16 +3,17 @@
 @section('container') 
 <div class="container">
     
-    <h1 class="text-center mb-4" style="font-family: 'Poppins', sans-serif;">Reports & Analytics</h1>
+    <h1 class="text-center mb-4 no-print" style="font-family: 'Poppins', sans-serif;">Reports & Analytics</h1>
 
     <!-- Tab Navigation -->
     <div class="d-flex justify-content-center mb-4">
-        <a href="{{ route('reports.index') }}" class="btn mx-2" style="background-color: #FB8500; color: #ffffff; border: none;">Main Page</a> <!-- Powder Blue -->
-        <a href="{{ route('reports.sales') }}" class="btn mx-2" style="background-color: #B0E0E6; color: #000; border: none;">Sales Report</a> <!-- Light Sky Blue -->
-        <a href="{{ route('reports.stock') }}" class="btn mx-2" style="background-color: #4682B4; color: #fff; border: none;">Stock Report</a> <!-- Steel Blue -->
-        <a href="{{ route('reports.income') }}" class="btn mx-2" style="background-color: #1E90FF; color: #fff; border: none;">Income Report</a> <!-- Dodger Blue -->
-        <a href="{{ route('reports.products') }}" class="btn mx-2" style="background-color: #003459; color: #fff; border: none;">Products Report</a> <!-- Dark Blue -->
+        <a href="{{ route('reports.index') }}" class="btn report-tab active">Main Page</a>
+        <a href="{{ route('reports.sales') }}" class="btn report-tab">Sales Report</a>
+        <a href="{{ route('reports.stock') }}" class="btn report-tab">Stock Report</a>
+        <a href="{{ route('reports.income') }}" class="btn report-tab ">Income Report</a>
+        <a href="{{ route('reports.products') }}" class="btn report-tab">Products Report</a>
     </div>
+
 
     <!-- Charts Section -->
     <div class="row">
@@ -151,5 +152,27 @@
     h1, h5 {
         font-family: 'Poppins', sans-serif;
     }
+    .report-tab {
+        background-color: #1E90FF;
+        color: white;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 15px;
+        margin: 5px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .report-tab:hover {
+        background-color: #004080;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .report-tab.active {
+        background-color: #003459;
+    }
+
+
+    
 </style>
 @endsection  

@@ -33,14 +33,36 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto navbar-list align-items-center">
-                        <li class="nav-item nav-icon">
-                            <button type="button" class="btn btn-light" id="notificationButton" data-toggle="modal" data-target="#notificationModal">
-                                <i class="ri-notification-3-line"></i>
+{{-- //*********************nOTIFICATION BELL******************************************* --}}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-bell fa-lg"></i>  
                                 @if($notifications->count() > 0)
-                                    <span class="badge badge-danger">{{ $notifications->count() }}</span>
+                                    <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-circle">
+                                        {{ $notifications->count() }}
+                                    </span>
                                 @endif
-                            </button>
+                            </a>
+                            
+                            <ul class="dropdown-menu dropdown-menu-center" aria-labelledby="notificationDropdown">
+                                <li><h5 class="dropdown-header">Notifications</h5></li>
+                                
+                                @foreach($notifications as $notification)
+                                    <li>
+                                        <a href="/inventory" class="dropdown-item notification-item d-flex align-items-center" data-id="{{ $notification->id }}">
+                                            <i class="fas fa-exclamation-circle text-warning me-2"></i>
+                                            <span class="text-truncate" style="max-width: 400px; ">{{ $notification->message }}</span>
+                                        </a>                                      
+                                    </li>
+                                    <hr class="dropdown-divider">
+                                @endforeach
+                                
+                                @if($notifications->isEmpty())
+                                    <li><a class="dropdown-item text-center text-muted">No new notifications</a></li>
+                                @endif
+                            </ul>
                         </li>
+                        {{-- //PROFILE --}}
                         <li class="nav-item nav-icon dropdown caption-content">
                             <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton4"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -77,7 +99,7 @@
     </div>
 </div>
 
-<!-- Notification Modal -->
+{{-- <!-- Notification Modal -->
 <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -112,28 +134,85 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <style>
-    .nav-item .btn-light {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 50px; /* Adjust width to match profile image size */
-        height: 50px; /* Adjust height to match profile image size */
-        border-radius: 20%; /* Make it circular */
-        padding: 0;
-    }
-    .nav-item .btn-light i {
-        font-size: 24px; /* Adjust icon size */
-    }
-    .nav-item .badge {
-        position: absolute;
-        top: 2px; /* Adjust position */
-        right: 2px; /* Adjust position */
-        font-size: 0.75rem;
-        padding: 0.20rem 0.4rem;
-        border-radius: 50%;
-    }
+
+.notification-item {
+    font-size: 14px;
+    padding: 10px 15px !important;
+    transition: background 0.3s ease !important; 
+    border-radius: 5px;
+}
+
+.notification-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-menu {
+    border-radius: 10px;
+}
+
+.dropdown-item i {
+    font-size: 18px;
+}
+
+.dropdown-menu {
+    left: 100% !important;
+    transform: translateX(-100%) !important;
+    width: 450px; /* Adjust width as needed */
+    max-height: 500px; /* Set max height */
+    overflow-y: auto; /* Enable scrolling if too many notifications */
+}
 </style>
+
+<script>
+ 
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.mark-as-read').forEach(item => {
+        item.addEventListener('click', function(event) {
+            event.preventDefault();
+            let notificationId = this.dataset.id;
+
+            fetch(`/notifications/${notificationId}/mark-read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            }).then(response => {
+                if (response.ok) {
+                    this.parentElement.remove();
+                    
+                    // Update notification count
+                    let badge = document.querySelector('#notificationDropdown .badge');
+                    let count = parseInt(badge.textContent) - 1;
+                    badge.textContent = count > 0 ? count : '';
+                }
+            });
+        });
+    });
+});
+
+$('.notification-item').click(function() {
+        let notificationId = $(this).data('id');
+
+        $.ajax({
+            url: "/notifications/read/" + notificationId,
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+            },
+            success: function(response) {
+                console.log(response);
+                alert('Notification marked as read!');
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+                alert('Error marking notification as read.');
+            }
+        });
+    });
+
+</script>

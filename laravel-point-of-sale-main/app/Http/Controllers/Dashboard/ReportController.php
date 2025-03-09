@@ -211,53 +211,117 @@ public function exportSales(Request $request)
 }
 
 
-    public function incomeReport(Request $request)
-    {
-        // Retrieve the start and end dates from the request
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+    // public function incomeReport(Request $request)
+    // {
+    //     // Retrieve the start and end dates from the request
+    //     $startDate = $request->input('start_date');
+    //     $endDate = $request->input('end_date');
     
-        // Query the orders based on the date range
-        $query = Order::with('orderDetails.product');
+    //     // Query the orders based on the date range
+    //     $query = Order::with('orderDetails.product');
     
-        if ($startDate && $endDate) {
-            $query->whereBetween('order_date', [$startDate, $endDate]);
-        }
+    //     if ($startDate && $endDate) {
+    //         $query->whereBetween('order_date', [$startDate, $endDate]);
+    //     }
     
-        $orders = $query->get();
+    //     $orders = $query->get();
     
-        $grossIncome = 0;
-        $netIncome = 0;
+    //     $grossIncome = 0;
+    //     $netIncome = 0;
     
-        // Prepare details for display
-        $details = [];
+    //     // Prepare details for display
+    //     $details = [];
     
-        // Loop through orders and calculate gross and net income
-        foreach ($orders as $order) {
-            foreach ($order->orderDetails as $item) {
-                $quantity = $item->quantity;
-                $sellingPrice = $item->unitcost; // Selling price
-                $buyingPrice = $item->product->buying_price; // Assuming you have a buying price field in the products table
+    //     // Loop through orders and calculate gross and net income
+    //     foreach ($orders as $order) {
+    //         foreach ($order->orderDetails as $item) {
+    //             $quantity = $item->quantity;
+    //             $sellingPrice = $item->unitcost; // Selling price
+    //             $buyingPrice = $item->product->buying_price; // Assuming you have a buying price field in the products table
     
-                // Calculate gross income and net income
-                $grossIncome += ($sellingPrice * $quantity);
-                $netIncome += (($sellingPrice - $buyingPrice) * $quantity);
+    //             // Calculate gross income and net income
+    //             $grossIncome += ($sellingPrice * $quantity);
+    //             $netIncome += (($sellingPrice - $buyingPrice) * $quantity);
     
-                // Add details for this item
-                $details[] = [
-                    'product' => $item->product->product_name,
-                    'quantity' => $quantity,
+    //             // Add details for this item
+    //             $details[] = [
+    //                 'product' => $item->product->product_name,
+    //                 'quantity' => $quantity,
+    //                 'selling_price' => $sellingPrice,
+    //                 'buying_price' => $buyingPrice,
+    //                 'total_selling' => $sellingPrice * $quantity,
+    //                 'total_profit' => ($sellingPrice - $buyingPrice) * $quantity,
+    //             ];
+    //         }
+    //     }
+    
+    //     // Pass values to the view
+    //     return view('reports.income', compact('grossIncome', 'netIncome', 'details', 'startDate', 'endDate'));
+    // }
+
+    public function incomeReport(Request $request) 
+{
+    // Retrieve the start and end dates from the request
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+
+    // Query the orders based on the date range
+    $query = Order::with('orderDetails.product');
+
+    if ($startDate && $endDate) {
+        $query->whereBetween('order_date', [$startDate, $endDate]);
+    }
+
+    $orders = $query->get();
+
+    $grossIncome = 0;
+    $netIncome = 0;
+
+    // Grouping sales details by product
+    $details = [];
+
+    // Loop through orders and calculate gross and net income
+    foreach ($orders as $order) {
+        foreach ($order->orderDetails as $item) {
+            $productName = $item->product->product_name;
+            $quantity = $item->quantity;
+            $sellingPrice = $item->unitcost; // Selling price
+            $buyingPrice = $item->product->buying_price; // Buying price from the product table
+
+            // Calculate total selling and total profit for the current order detail
+            $totalSelling = $sellingPrice * $quantity;
+            $totalProfit = ($sellingPrice - $buyingPrice) * $quantity;
+
+            // Add to the total gross and net income
+            $grossIncome += $totalSelling;
+            $netIncome += $totalProfit;
+
+            // Group by product name
+            if (!isset($details[$productName])) {
+                $details[$productName] = [
+                    'product' => $productName,
+                    'quantity' => 0,
                     'selling_price' => $sellingPrice,
                     'buying_price' => $buyingPrice,
-                    'total_selling' => $sellingPrice * $quantity,
-                    'total_profit' => ($sellingPrice - $buyingPrice) * $quantity,
+                    'total_selling' => 0,
+                    'total_profit' => 0,
                 ];
             }
+
+            // Aggregate totals
+            $details[$productName]['quantity'] += $quantity;
+            $details[$productName]['total_selling'] += $totalSelling;
+            $details[$productName]['total_profit'] += $totalProfit;
         }
-    
-        // Pass values to the view
-        return view('reports.income', compact('grossIncome', 'netIncome', 'details', 'startDate', 'endDate'));
     }
+
+    // Convert details to an array for the Blade template
+    $details = array_values($details);
+
+    // Pass values to the view
+    return view('reports.income', compact('grossIncome', 'netIncome', 'details', 'startDate', 'endDate'));
+}
+
     
     
 
