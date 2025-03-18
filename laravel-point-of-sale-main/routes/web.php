@@ -21,6 +21,10 @@ use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\TransactionController;
 use App\Http\Controllers\Dashboard\InventoryController;
 use App\Http\Controllers\Dashboard\NotificationController;
+use App\Http\Controllers\Dashboard\SettingsController;
+
+
+
 
 
 /*
@@ -49,8 +53,7 @@ Route::get('/', function () {
     Route::get('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
     Route::get('/sales-chart', [SalesController::class, 'showSalesChart']);
     Route::get('/dashboard/sales-revenue', [DashboardController::class, 'getSalesRevenueData'])->name('dashboard.sales_revenue');
-
-Route::get('/dashboard/sales-revenue', [DashboardController::class, 'getSalesRevenueData']);
+    Route::get('/dashboard/sales-revenue', [DashboardController::class, 'getSalesRevenueData']);
 
 
 
@@ -188,7 +191,9 @@ Route::get('/backup/create', [DatabaseBackupController::class, 'create'])->name(
 Route::get('/database-backups', [DatabaseBackupController::class, 'index'])->name('backup.index');
 
 
-
+        //============= settings
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+        
 
     // ====== ROLE CONTROLLER ======
     // Permissions

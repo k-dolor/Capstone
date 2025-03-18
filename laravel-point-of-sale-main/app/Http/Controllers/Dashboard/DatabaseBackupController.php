@@ -16,6 +16,7 @@ class DatabaseBackupController extends Controller
 
     public function index(Request $request)
     {
+        
         $backupPath = storage_path('app/POS');
         $search = $request->input('search');
         $orderDate = $request->input('order_date');
@@ -96,7 +97,7 @@ public function create()
     $databaseName = env('DB_DATABASE');
     $username = env('DB_USERNAME');
     $password = env('DB_PASSWORD');
-    $backupPath = storage_path('app/POS/' . date('Y-m-d_H-i-s') . '.sql');
+    $backupPath = storage_path('app/POS/' . date('Y-m-d_H-i') . '.sql');
 
     
 

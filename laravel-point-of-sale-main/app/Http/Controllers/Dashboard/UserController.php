@@ -70,8 +70,12 @@ class UserController extends Controller
         $user = User::create($validatedData);
 
         if($request->role) {
-            $user->assignRole($request->role);
+            $role = Role::find($request->role);
+            if ($role) {
+                $user->assignRole($role->name);
+            }
         }
+        
 
         return Redirect::route('users.index')->with('success', 'New User has been created!');
     }
@@ -137,8 +141,12 @@ class UserController extends Controller
         $userData->update($validatedData);
 
         if($request->role) {
-            $userData->syncRoles($request->role);
+            $role = Role::find($request->role);
+            if ($role) {
+                $userData->syncRoles($role->name);
+            }
         }
+        
 
         return Redirect::route('users.index')->with('success', 'User has been updated!');
     }

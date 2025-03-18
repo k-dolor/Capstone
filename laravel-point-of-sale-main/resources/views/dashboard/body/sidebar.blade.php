@@ -100,29 +100,6 @@
                         </li>
                     </ul>
                 </li>
-yyy                
-
-
-                {{-- ///////////////////////////////////////////////////////////////////////////////////// --}}
-                {{-- <hr> --}}
-
-                {{-- @if (auth()->user()->can('supplier.menu'))
-                <li class="{{ Request::is('supplier*') ? 'active' : '' }}">
-                    <a href="{{ route('suppliers.index') }}" class="svg-icon">
-                        <i class="fa-solid fa-users"></i>
-                        <span class="ml-3">Suppliers</span>
-                    </a>
-                </li>
-                @endif --}}
-
-                {{-- @if (auth()->user()->can('transactions.menu'))
-                <li class="{{ Request::is('transactions*') ? 'active' : '' }}">
-                    <a href="{{ route('transactions.index') }}" class="svg-icon">
-                        <i class="fa-solid fa-exchange-alt"></i>
-                        <span class="ml-3">Transactions</span>
-                    </a>
-                </li>
-                @endif --}}
 
 
                 <li class="{{ Request::is('reports') ? 'active' : '' }}">
@@ -133,18 +110,32 @@ yyy
                         <span class="ml-4">Reports</span>
                     </a>
                 </li>
+
+
+                {{-- NEW SETTINGS FEATURE --}}
+                @if (auth()->user()->can('roles.menu'))
+                <li class="nav-item">
+                    <a href="{{ route('settings.index') }}" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span class="ml-3">Admin Panel</span>
+                    </a>
+                </li>   
+                @endif    
+                
+                
+                
                 
                 {{-- ===========TO BE EDIT ============= --}}
 
-                @if (auth()->user()->can('roles.menu'))
+                {{-- @if (auth()->user()->can('roles.menu'))
                 <li>
                     <a href="#permission" class="collapsed" data-toggle="collapse" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-gear" viewBox="0 0 16 16">
                             <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0"/>
                           </svg>
                           
-                        {{-- <i class="fa-solid fa-key"></i> --}}
-                        <span class="ml-3">Users & Roles</span>
+                      
+                        <span class="ml-3">Roles</span>
                         <svg class="svg-icon iq-arrow-right arrow-active" width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" stroke="currentColor">
                             <path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
                         </svg>
@@ -173,18 +164,10 @@ yyy
                         </li>
                     </ul>
                 </li>
-                @endif
-
-                {{-- @if (auth()->user()->can('user.menu'))
-                <li class="{{ Request::is('users*') ? 'active' : '' }}">
-                    <a href="{{ route('users.index') }}" class="svg-icon">
-                        <i class="fa-solid fa-users"></i>
-                        <span class="ml-3">Users</span>
-                    </a>
-                </li>
                 @endif --}}
 
-                @if (auth()->user()->can('database.menu'))
+
+                {{-- @if (auth()->user()->can('database.menu'))
                 <li class="{{ Request::is('database/backup*') ? 'active' : '' }}">
                     <a href="{{ route('backup.index') }}" class="svg-icon">
                       
@@ -195,7 +178,7 @@ yyy
                         <span class="ml-3">Backup Database</span>
                     </a>
                 </li>
-                @endif
+                @endif --}}
             </ul>
         </nav>
         <div class="p-3"></div>

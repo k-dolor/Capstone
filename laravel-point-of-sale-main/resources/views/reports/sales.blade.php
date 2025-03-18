@@ -121,7 +121,7 @@
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <thead style="background-color: #dfe3e8;">
-                        <tr>
+                    <tr>
                     <th>Order Date</th>
                     <th>Total Amount</th>
                     <th>Payment Type</th>
