@@ -2,7 +2,7 @@
 
 @section('container')
 @include('dashboard.body.navbar')
-<div class="container-fluid bg-light p-4" style="border-radius: 5px;">
+<div class="container-fluid p-4" style="border-radius: 5px;">
     @if (session()->has('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Success!</strong> {{ session('success') }}
@@ -12,7 +12,7 @@
         </div>
     @endif
 
-    <h1 class="text-center mb-5">Dashboard</h1>
+    <h1 class="text-center mb-5" style="color: rgb(42, 23, 5)">Dashboard</h1>
 
     <div class="row">
         @foreach ([
@@ -54,9 +54,9 @@
                 <div class="card-header bg-white font-weight-bold d-flex justify-content-between">
                     <span>Total Sales</span>
                     <select id="salesFilter" class="form-control form-control-sm w-auto">
-                        <option value="yearly">Yearly</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="weekly">Weekly</option>
+                        <option value="yearly">This Year</option>
+                        <option value="monthly">This Month</option>
+                        <option value="weekly">This Week</option>
                         <option value="previousMonth">Previous Month</option>
                     </select>
                 </div>

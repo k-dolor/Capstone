@@ -160,15 +160,93 @@ class OrderController extends Controller
 //     return redirect()->route('invoice.show', ['order_id' => $order_id]);
 // }
 ///xxxxxxxxxxxxxold working before notifcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// public function storeOrder(Request $request)
+// {
+//     // Validation rules
+//     $rules = [
+//         'customer_name' => 'nullable|string|max:255', 
+//         'payment_status' => 'required|string',
+//         'pay' => 'nullable|numeric', 
+//         'discount' => 'nullable|numeric|min:0|max:100', 
+//     ];
+
+//     // Generate a unique invoice number
+//     $invoice_no = IdGenerator::generate([
+//         'table' => 'orders',
+//         'field' => 'invoice_no',
+//         'length' => 10,
+//         'prefix' => 'INV-'
+//     ]);
+
+//     // Validate the request data
+//     $validatedData = $request->validate($rules);
+
+//     // Get discount value (default to 0 if not provided)
+//     $discount = $request->input('discount', 0);
+
+//     // Calculate the total after discount
+//     $subTotal = Cart::subtotal();
+//     $vat = Cart::tax();
+//     $totalBeforeDiscount = $subTotal + $vat;
+//     $discountAmount = $totalBeforeDiscount * ($discount / 100);  
+//     $totalAfterDiscount = $totalBeforeDiscount - $discountAmount;  
+
+//     // Add additional data to the validated array
+//     $validatedData['order_date'] = Carbon::now();
+//     $validatedData['order_status'] = 'complete';
+//     $validatedData['total_products'] = Cart::count();
+//     $validatedData['sub_total'] = $subTotal;
+//     $validatedData['vat'] = $vat;
+//     $validatedData['invoice_no'] = $invoice_no;
+//     $validatedData['discount'] = $discountAmount;
+//     $validatedData['total'] = $totalAfterDiscount;
+//     $validatedData['due'] = $totalAfterDiscount - ($validatedData['pay'] ?? 0);
+//     $validatedData['created_at'] = Carbon::now();
+
+//     // Insert order and get the ID
+//     $order_id = Order::insertGetId($validatedData);
+
+//     // Create Order Details and Deduct Stock
+//     $contents = Cart::content();
+//     $oDetails = [];
+
+//     foreach ($contents as $content) {
+//         $oDetails[] = [
+//             'order_id' => $order_id,
+//             'product_id' => $content->id,
+//             'quantity' => $content->qty,
+//             'unitcost' => $content->price,
+//             'total' => $content->total,
+//             'created_at' => Carbon::now(),
+//         ];
+
+//         // Deduct stock
+//         Product::where('id', $content->id)
+//             ->decrement('product_store', $content->qty);
+//     }
+
+//     // Insert all order details at once
+//     OrderDetails::insert($oDetails);
+
+//     // Clear the shopping cart
+//     Cart::destroy();
+
+//     // Redirect to the invoice page with the order ID
+//     return redirect()->route('invoice.show', ['order_id' => $order_id]);
+// }
+///NEW WITHOUT PROCEEDING IF PAYMENT IS LESS THAN TOTAL//
 public function storeOrder(Request $request)
 {
     // Validation rules
     $rules = [
-        'customer_name' => 'nullable|string|max:255', 
+        'customer_name' => 'nullable|string|max:255',
         'payment_status' => 'required|string',
-        'pay' => 'nullable|numeric', 
-        'discount' => 'nullable|numeric|min:0|max:100', 
+        'pay' => 'nullable|numeric|min:0',
+        'discount' => 'nullable|numeric|min:0|max:100',
     ];
+
+    // Validate the request data
+    $validatedData = $request->validate($rules);
 
     // Generate a unique invoice number
     $invoice_no = IdGenerator::generate([
@@ -178,9 +256,6 @@ public function storeOrder(Request $request)
         'prefix' => 'INV-'
     ]);
 
-    // Validate the request data
-    $validatedData = $request->validate($rules);
-
     // Get discount value (default to 0 if not provided)
     $discount = $request->input('discount', 0);
 
@@ -188,10 +263,20 @@ public function storeOrder(Request $request)
     $subTotal = Cart::subtotal();
     $vat = Cart::tax();
     $totalBeforeDiscount = $subTotal + $vat;
-    $discountAmount = $totalBeforeDiscount * ($discount / 100);  
-    $totalAfterDiscount = $totalBeforeDiscount - $discountAmount;  
+    $discountAmount = $totalBeforeDiscount * ($discount / 100);
+    $totalAfterDiscount = $totalBeforeDiscount - $discountAmount;
 
-    // Add additional data to the validated array
+    // Get the payment amount (default to 0 if not provided)
+    $payAmount = $validatedData['pay'] ?? 0;
+
+    // Check if payment is sufficient
+    if ($payAmount < $totalAfterDiscount) {
+        return redirect()->back()
+            ->withInput() // Keeps previous inputs so the user doesn't have to re-enter data
+            ->with('error', 'Payment is insufficient! Please pay at least ₱' . number_format($totalAfterDiscount, 2) . ' to complete the order.');
+    }
+
+    // Prepare order data
     $validatedData['order_date'] = Carbon::now();
     $validatedData['order_status'] = 'complete';
     $validatedData['total_products'] = Cart::count();
@@ -200,7 +285,7 @@ public function storeOrder(Request $request)
     $validatedData['invoice_no'] = $invoice_no;
     $validatedData['discount'] = $discountAmount;
     $validatedData['total'] = $totalAfterDiscount;
-    $validatedData['due'] = $totalAfterDiscount - ($validatedData['pay'] ?? 0);
+    $validatedData['due'] = $totalAfterDiscount - $payAmount;
     $validatedData['created_at'] = Carbon::now();
 
     // Insert order and get the ID
@@ -234,6 +319,8 @@ public function storeOrder(Request $request)
     // Redirect to the invoice page with the order ID
     return redirect()->route('invoice.show', ['order_id' => $order_id]);
 }
+
+
 /////////OLD WORKING//////////////021225/
 
 ///////////////NEW WITH NOTFI 021225/////////////////
@@ -416,22 +503,22 @@ public function getOrderDetails($id) {
         ]);
     }
 
-    public function pendingDue()
-    {
-        $row = (int) request('row', 10);
+    // public function pendingDue()
+    // {
+    //     $row = (int) request('row', 10);
 
-        if ($row < 1 || $row > 100) {
-            abort(400, 'The per-page parameter must be an integer between 1 and 100.');
-        }
+    //     if ($row < 1 || $row > 100) {
+    //         abort(400, 'The per-page parameter must be an integer between 1 and 100.');
+    //     }
 
-        $orders = Order::where('due', '>', '0')
-            ->sortable()
-            ->paginate($row);
+    //     $orders = Order::where('due', '>', '0')
+    //         ->sortable()
+    //         ->paginate($row);
 
-        return view('orders.pending-due', [
-            'orders' => $orders
-        ]);
-    }
+    //     return view('orders.pending-due', [
+    //         'orders' => $orders
+    //     ]);
+    // }
 
     // public function orderDueAjax(Int $id)
     // {

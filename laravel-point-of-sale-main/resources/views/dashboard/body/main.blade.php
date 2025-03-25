@@ -21,9 +21,18 @@
 
         <style>
             body {
-            background-color: #bdc5cf; 
-            /* background-color: #f7f4f0;  */
-        }
+
+                font-family: 'Poppins', sans-serif;
+                /* font-family: 'Inter', sans-serif; */
+                /* font-family: 'Montserrat', sans-serif; */
+                /* background-color: #c5d1db;  */
+                
+                /* background-color: #0e0f10;  */
+                background-color: #d7d7d7; 
+                /* background-color: #f7f4f0;  */
+                
+                /* background-color: #ebeff3;  */
+            }
         </style>
 
 

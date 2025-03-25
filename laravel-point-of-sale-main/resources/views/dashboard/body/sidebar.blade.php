@@ -10,7 +10,7 @@
 
          {{-- ////////////SIDE LOGO/////////////////////// --}}
 
-        <div class="iq-sidebar sidebar-default" style="background-color: #f8f9fa;"> <!-- Powder white background -->
+        <div class="iq-sidebar sidebar-default" > <!-- Powder white background -->
             <div class="iq-sidebar-logo-card d-flex align-items-center justify-content-center p-3" style="background-color: #ff7f00; border-radius: 0px; margin: 0px;"> <!-- Orange background -->
                 <a href="{{ route('dashboard') }}" class="header-logo d-flex align-items-center">
                     <img src="{{ asset('assets/images/ln_logo.png') }}" class="img-fluid" alt="logo" style="width: 55px; height: auto; margin-right: 10px;"> 
@@ -195,10 +195,10 @@
         /* background-color: #fe6601; Orange background */
         /* background: linear-gradient(to top, #daa002, #ff7c17); */
         /* background: linear-gradient(to top, #b39e62, #e86507)!important; */
-         background-color: #d4d2d0; /*WHITE / Orange background*/
+        background-color: #d7d7d7; /*WHITE / Orange background*/
         color: #FFFFFF !important; /* Ensure white text is enforced */
         transition: all 0.3s ease;
-        font-family: 'Poppins', sans-serif; /* Modern font */
+        /* font-family: 'Poppins', sans-serif; Modern font */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 

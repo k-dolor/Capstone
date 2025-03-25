@@ -71,7 +71,7 @@
         <div class="receipt-summary">
             <p><strong>Payment Type:</strong> {{ $order->payment_status }} <br>
             <strong>Paid:</strong> ₱{{ $order->pay }} <br>
-            <strong>Due:</strong> ₱{{ $order->due }}</p>
+            <strong>Change:</strong> ₱{{ $order->due }}</p>
         </div>
 
         <hr style="border-top: 1px solid #000; margin: 10px 0;">
