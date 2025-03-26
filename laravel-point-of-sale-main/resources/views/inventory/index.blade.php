@@ -2,7 +2,7 @@
 
 @section('container')
 <div class="content">
-    <h1 class="text-center mb-4" style="font-family: 'Poppins', sans-serif;">Inventory</h1>
+    <h1 class="text-center mb-4" style="font-family: 'Poppins', sans-serif;  color: rgb(42, 23, 5);">Inventory</h1>
     @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -45,6 +45,7 @@
                             <option value="out_of_stock" @if(request('stock_status') == 'out_of_stock') selected @endif>Out of Stock</option>
                         </select>
                     </div>
+                    
                     <div class="form-group mb-0 d-flex">
                         <button type="submit" class="btn btn-custom-search me-2">
                             <i class="fa-solid fa-magnifying-glass"></i> Search
@@ -58,7 +59,7 @@
         </form>
 
         @if($noProducts)
-        <div class="alert alert-warning mt-4">
+        <div class="alert alert-warning mt-4" style="background: #f79994; color:#030721;">
             <strong>No products found for the selected filter.</strong>
         </div>
         @endif
@@ -96,18 +97,18 @@
                             <td>{{ $product->product_store }}</td>
                             <td>
                                 @if ((int)$product->product_store <= 0)
-                                    <span style="color: #ff0000; font-weight: bold; background-color: #f8d7da; padding: 8px 8px; border-radius: 5px;">No Stock</span>
+                                    <span style="color: #ff0000; font-weight: bold; background-color: #f8d7da; padding: 5px 5px; border-radius: 5px;">No Stock</span>
                                 @elseif ((int)$product->product_store > 0 && (int)$product->product_store < 10)
-                                    <span style="color: #f5f4f3; font-weight: bold; background-color: #d33707; padding: 8px 8px; border-radius: 5px;">LowStock</span>
+                                    <span style="color: #f5f4f3; font-weight: bold; background-color: #d33707; padding: 5px 5px; border-radius: 5px;">Low Stock</span>
                                 @else
-                                    <span style="color: #002d13; font-weight: bold; background-color: #25d952a2; padding: 8px 8px; border-radius: 5px;">In Stock</span>
+                                    <span style="color: #002d13; font-weight: bold; background-color: #25d952a2; padding: 5px 5px; border-radius: 5px;">In Stock</span>
                                 @endif
                             </td>
                             <td style="background-color: #f4f6f9;">₱{{ number_format($product->buying_price, 2) }}</td>
                             <td style="background-color: #f4f6f9;">₱{{ number_format($product->selling_price * $product->product_store, 2) }}</td>
                             <td>
                                  <!-- Stock In Button -->
-                            <button type="button" class="btn btn-primary btn-sm stock-in-btn" style="border-radius: 3px; font-size:14px; padding: 7px 10px; background-color: #13982d; color: white; border: none;"
+                            <button type="button" class="btn btn-primary btn-sm stock-in-btn" style="border-radius: 4px; font-size:14px; padding: 7px 10px; background-color: #13982d; color: white; border: none;"
                                 data-bs-toggle="modal" data-bs-target="#stockInModal" data-product-id="{{ $product->id }}" 
                                 data-product-name="{{ $product->product_name }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
@@ -116,7 +117,7 @@
                               </svg> Stock In
                             </button>
                               <!-- History Icon -->
-                                <a href="{{ route('products.stock-in-history', $product->id) }}" class="btn btn-sm" title="History" style="border-radius: 3px; font-size:14px; padding: 7px 10px; background-color: #fbe91fc7; color: white; border: none;">
+                                <a href="{{ route('products.stock-in-history', $product->id) }}" class="btn btn-sm" title="History" style="border-radius: 4px; font-size:14px; padding: 7px 10px; background-color: #fbe91fc7; color: white; border: none;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="dark" class="bi bi-clock-history" viewBox="0 0 16 16">
                                     <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
                                     <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
@@ -182,6 +183,22 @@
 
 
 <style>
+    /*TABLE */
+    .table th, .table td {
+    padding: 6px 8px; /* Adjust padding for compact spacing */
+    text-align: center; /* Center align text */
+    vertical-align: middle; /* Keep content aligned properly */
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.table img.product-image {
+    width: 45px; 
+    height: 45px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
     /* Style for the modal header */
 .modal-header.bg-primary {
     background-color: #f25939 !important; /* Change the background color here */

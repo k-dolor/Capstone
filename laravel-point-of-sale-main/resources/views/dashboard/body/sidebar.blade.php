@@ -195,7 +195,7 @@
         /* background-color: #fe6601; Orange background */
         /* background: linear-gradient(to top, #daa002, #ff7c17); */
         /* background: linear-gradient(to top, #b39e62, #e86507)!important; */
-        background-color: #d7d7d7; /*WHITE / Orange background*/
+        background-color: #dcdde1; /*WHITE / Orange background*/
         color: #FFFFFF !important; /* Ensure white text is enforced */
         transition: all 0.3s ease;
         /* font-family: 'Poppins', sans-serif; Modern font */
@@ -226,7 +226,7 @@
 
     /* Sidebar Menu */
     .iq-sidebar-menu {
-        padding: 20px 0;
+        padding: 18px 0;
     }
 
     .iq-sidebar-menu ul {
@@ -254,7 +254,7 @@
     }
 
     .iq-sidebar-menu ul li a svg {
-        margin-right: 15px;
+        margin-right: 12px;
         transition: transform 0.3s ease;
     }
 

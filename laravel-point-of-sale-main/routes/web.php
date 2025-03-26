@@ -148,7 +148,6 @@ Route::post('/notifications/read/{id}', [NotificationController::class, 'markAsR
 
 
 
-
     // Create Order
     Route::post('/pos/order', [OrderController::class, 'storeOrder'])->name('pos.storeOrder');
 

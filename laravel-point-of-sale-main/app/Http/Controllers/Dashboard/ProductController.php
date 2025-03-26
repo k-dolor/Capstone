@@ -478,8 +478,8 @@ public function stockInHistory(Product $product)
             $product_code = $sheet->getCell('D' . $row)->getValue();
             $product_store = $sheet->getCell('E' . $row)->getValue();
             $buying_date = $sheet->getCell('F' . $row)->getValue();
-            $buying_price = $sheet->getCell('H' . $row)->getValue();
-            $selling_price = $sheet->getCell('I' . $row)->getValue();
+            $buying_price = $sheet->getCell('G' . $row)->getValue();
+            $selling_price = $sheet->getCell('H' . $row)->getValue();
 
             // Find category and supplier by their names
             $category = Category::where('name', $category_name)->first();

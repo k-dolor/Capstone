@@ -5,7 +5,7 @@
     <div class="row">
         <!-- Left Column: Product Display -->
         <div class="col-lg-7 col-md-12">
-            <h1 class="text-center mb-2" style="font-family: 'Poppins', sans-serif;">Point of Sales</h1>
+            <h1 class="text-center mb-2" style="font-family: 'Poppins', sans-serif; color: rgb(42, 23, 5)">Point of Sales</h1>
             <!-- Search Bar and Category Dropdown -->
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <form action="#" method="get" class="w-60 d-flex align-items-center">
@@ -15,6 +15,7 @@
                 </form>              
             </div>
 
+            
              <!-- Product Grid with Scrollable Container -->
                 <div class="product-grid-container">
                     <div class="row g-0"> <!-- Use 'g-0' to remove grid gap -->
@@ -98,7 +99,7 @@
                 </div>
                 
                 
-                <div class="card-footer" style="background-color: #343a40; color: white; padding: 10px;">
+                {{-- <div class="card-footer" style="background-color: #343a40; color: white; padding: 10px;">
                     <div class="text-right">
                         <p><strong>Subtotal: </strong>₱<span id="cart-subtotal">{{ number_format(Cart::subtotal(), 2) }}</span></p>
                         <p><strong>Tax: </strong>₱<span id="cart-tax">{{ number_format(Cart::tax(), 2) }}</span></p>
@@ -112,7 +113,33 @@
                     <button type="button" class="btn btn-custom btn-block" data-toggle="modal" data-target="#createInvoiceModal">
                         Create Invoice
                     </button>  
+                </div> --}}
+                @php
+                    $subtotal = Cart::subtotal(); // Initialize subtotal
+                    $vatRate = 12; // VAT percentage
+                    $vatAmount = $subtotal * ($vatRate / (100 + $vatRate)); // Extract VAT from subtotal
+                    $subtotalWithoutVAT = $subtotal - $vatAmount;
+                @endphp
+
+            
+            <div class="card-footer" style="background-color: #343a40; color: white; padding: 10px;">
+                <div class="text-right">
+                    <p><strong>Subtotal (Without VAT): </strong>₱<span id="cart-subtotal">{{ number_format($subtotalWithoutVAT, 2) }}</span></p>
+                    <p><strong>Tax ({{ $vatRate }}%): </strong>₱<span id="cart-tax">{{ number_format($vatAmount, 2) }}</span></p>
                 </div>
+                <div class="text-end">
+                    <p><strong>Total Amount: </strong> 
+                        <span id="cart-total" style="color: #ffcc00; font-size: 25px;">₱ {{ number_format($subtotal, 2) }}</span>
+                    </p>
+                </div>
+                
+                <button type="button" class="btn btn-custom btn-block" data-toggle="modal" data-target="#createInvoiceModal">
+                    Create Invoice
+                </button>  
+            </div>
+            
+
+
             </div>
         </div>
         
@@ -156,7 +183,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="discount">Discount (PWD/Senior)</label>
-                                <select class="form-control" id="discount" name="discount" onchange="applyDiscount()">
+                                    <select class="form-control" id="discount" name="discount" onchange="applyDiscount()">
                                     <option value="0">None</option>
                                     <option value="5">PWD/Senior (5%)</option>
                                 </select>
@@ -226,13 +253,20 @@
                         </div>
                     </div>
 
-                    <!-- Total Amount After Discount -->
+                    <!-- Total Amount After Discount -->       
+                    @php
+                        // Use the raw numeric value of the total, without formatting
+                        $rawTotal = floatval(Cart::subtotal(2, '.', '')); // Should be 1225 if that's the correct price
+                        $vatRate = 12;
+                        $vatAmount = $rawTotal * ($vatRate / (100 + $vatRate)); // Extract VAT
+                        $subtotalWithoutVAT = $rawTotal - $vatAmount;
+                    @endphp
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="text-right">
-                                <p><strong>Subtotal: </strong>₱<span id="subtotal">{{ Cart::subtotal() }}</span></p>
-                                <p><strong>Tax: </strong>₱{{ Cart::tax() }}</p>
-                                <h2><strong>Total: </strong>₱<span id="total">{{ Cart::total() }}</span></h2>
+                                <p><strong>Subtotal (Without VAT): </strong>₱<span id="subtotal">{{ number_format($subtotalWithoutVAT, 2) }}</span></p>
+                                <p><strong>VAT ({{ $vatRate }}%): </strong>₱<span id="vatAmount">{{ number_format($vatAmount, 2) }}</span></p>
+                                <h2><strong>Total: </strong>₱<span id="total">{{ number_format($rawTotal, 2) }}</span></h2>
                             </div>
                         </div>
                     </div>
@@ -241,7 +275,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <!-- Complete Order Button -->
-                    <button type="submit" class="btn btn-success mr-2" data-toggle="tooltip" data-placement="top" title="Complete">
+                    <button type="submit" class="btn btn-order mr-2" data-toggle="tooltip" data-placement="top" title="Complete">
                         Complete Order
                     </button>
 
@@ -317,28 +351,28 @@
         }
     });
 
-    // CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+    // ======================================================
 
 
     function applyDiscount() {
-        // Get the selected discount value
-        var discountValue = document.getElementById("discount").value;
-        
-        // Get the current total amount
-        var totalAmount = parseFloat("{{ Cart::total() }}");
+    // Get the selected discount value as a number (e.g., 5 for 5%)
+    var discountValue = parseFloat(document.getElementById("discount").value);
+    
+      // Use the same raw total that you expect
+      var totalAmount = parseFloat("{{ Cart::subtotal(2, '.', '') }}");
+    
+    // Calculate the discount amount (should be subtracted)
+    var discountAmount = (discountValue / 100) * totalAmount;
+    
+    // Calculate the new total after subtracting the discount
+    var newTotal = totalAmount - discountAmount;
+    
+    // Update the total amount in the modal (formatted to 2 decimals)
+    document.getElementById("total").textContent = newTotal.toFixed(2);
+}
 
-        // Calculate discount
-        var discountAmount = (discountValue / 100) * totalAmount;
-        
-        // Calculate the new total amount after discount
-        var newTotal = totalAmount - discountAmount;
-        
-        // Update the total amount in the modal
-        document.getElementById("total").textContent = newTotal.toFixed(2);
 
-        // Optionally, you can update the subtotal if needed
-        // document.getElementById("subtotal").textContent = (totalAmount - discountAmount).toFixed(2);
-    }
+
 
     // Increase Quantity ==================
     
@@ -401,24 +435,24 @@
     }
 });
 
-//*PAY NOW LESS THAN TOTAL --------//
-function calculateChange() {
-        let total = parseFloat(document.getElementById('total').textContent.replace(/[^0-9.]/g, '')) || 0;
-        let pay = parseFloat(document.getElementById('pay').value) || 0;
-        let change = pay - total;
+    //*PAY NOW LESS THAN TOTAL --------//
+    function calculateChange() {
+            let total = parseFloat(document.getElementById('total').textContent.replace(/[^0-9.]/g, '')) || 0;
+            let pay = parseFloat(document.getElementById('pay').value) || 0;
+            let change = pay - total;
 
-        document.getElementById('change').value = change >= 0 ? `₱${change.toFixed(2)}` : "₱0.00";
-    }
-
-    document.getElementById("paymentForm").addEventListener("submit", function(event) {
-        let total = parseFloat(document.getElementById('total').textContent.replace(/[^0-9.]/g, '')) || 0;
-        let pay = parseFloat(document.getElementById('pay').value) || 0;
-
-        if (pay < total) {
-            event.preventDefault();  // Prevent form submission
-            alert("Payment must be equal to or greater than the total amount!");
+            document.getElementById('change').value = change >= 0 ? `₱${change.toFixed(2)}` : "₱0.00";
         }
-    });
+
+        document.getElementById("paymentForm").addEventListener("submit", function(event) {
+            let total = parseFloat(document.getElementById('total').textContent.replace(/[^0-9.]/g, '')) || 0;
+            let pay = parseFloat(document.getElementById('pay').value) || 0;
+
+            if (pay < total) {
+                event.preventDefault();  // Prevent form submission
+                alert("Payment must be equal to or greater than the total amount!");
+            }
+        });
 
    
 </script>
@@ -642,7 +676,7 @@ function calculateChange() {
         }
 
         .clear-btn {
-            background-color: #949494 !important;  /* Red background */
+            background-color: #626262 !important;  /* Red background */
             border: none;
             font-size: 14px !important; /* Adjust font size */
             font-weight: bold !important;

@@ -28,40 +28,41 @@
                 <tr>
                     <th>Description</th>
                     <th>Qty</th>
-                    <th>Price</th>
-                    <th>Amount</th>
+                    <th>Base Price</th>
+                    <th>VAT (12%)</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($orderDetails as $item)
+                @php
+                    $basePrice = $item->unitcost / 1.12; // Compute base price (excluding VAT)
+                    $vatAmount = $item->unitcost - $basePrice; // Compute VAT amount
+                @endphp
                 <tr>
                     <td>{{ $item->product->product_name }}</td>
                     <td>{{ $item->quantity }}</td>
-                    <td>₱{{ number_format($item->unitcost, 2) }}</td>
-                    <td>₱{{ number_format($item->total, 2) }}</td>
+                    <td>₱{{ number_format($basePrice, 2) }}</td> <!-- Base Price -->
+                    <td>₱{{ number_format($vatAmount, 2) }}</td> <!-- VAT Amount -->
+                    <td>₱{{ number_format($item->unitcost, 2) }}</td> <!-- Full Price (Including VAT) -->
                 </tr>
                 @endforeach
                 <tr>
-                    <td colspan="3"><strong>Subtotal</strong></td>
-                    <td><strong>₱{{ number_format($order->sub_total, 2) }}</strong></td>
+                    <td colspan="4"><strong>Subtotal (Excluding VAT)</strong></td>
+                    <td><strong>₱{{ number_format($order->sub_total / 1.12, 2) }}</strong></td>
                 </tr>
                 <tr>
-                    <td colspan="3"><strong>VAT (12%)</strong></td>
-                    <td><strong>₱{{ number_format($order->vat, 2) }}</strong></td>
+                    <td colspan="4"><strong>VAT (12%)</strong></td>
+                    <td><strong>₱{{ number_format($order->sub_total - ($order->sub_total / 1.12), 2) }}</strong></td>
                 </tr>
-                {{-- <tr>
-                    <td colspan="3"><strong>Total</strong></td>
+                <tr>
+                    <td colspan="4"><strong>Discount</strong></td>
+                    <td><strong>₱{{ number_format($order->discount, 2) }}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><strong>Total</strong></td>
                     <td><strong>₱{{ number_format($order->total, 2) }}</strong></td>
-                </tr> --}}
-                <tr>
-                    <td colspan="3"><strong>Discount</strong></td>
-                    <td><strong>₱{{ number_format($order->discount, 2) }}</strong></td> <!-- Display Discount -->
                 </tr>
-                <tr>
-                    <td colspan="3"><strong>Total</strong></td>
-                    <td><strong>₱{{ number_format($order->total, 2) }}</strong></td> <!-- Display Total After Discount -->
-                </tr>
-                
             </tbody>
         </table>
         

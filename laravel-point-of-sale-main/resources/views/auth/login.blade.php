@@ -22,6 +22,17 @@
             <div class="card" style="border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); width: 350px; background: #e8e7e7;">
                 <div class="card-body">
                     <h2 class="text-center mb-5" style="font-family: 'Poppins', sans-serif;">LOGIN</h2>
+                    
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form action="{{ route('login') }}" method="POST">
                         @csrf
                         <div class="form-group mb-4">

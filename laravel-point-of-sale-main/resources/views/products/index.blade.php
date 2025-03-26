@@ -22,14 +22,13 @@
     </div>
 @endif
 
-            <div class="d-flex flex-wrap align-items-right justify-content-between mb-4">
-                <div>
-                    <a href="{{ route('products.importView') }}" class="btn btn-success add-list">Import</a>
-                    <a href="{{ route('products.exportData') }}" class="btn btn-warning add-list">Export</a>
-                    <a href="{{ route('products.create') }}" class="btn btn-primary add-list">Add Product</a>
-                </div>
-            </div>
-        </div>
+<div class="d-flex justify-content-end mb-4">
+    <div>
+        <a href="{{ route('products.importView') }}" class="btn custom-import btn-lg add-list">Import</a>
+        <a href="{{ route('products.exportData') }}" class="btn custom-export btn-lg add-list">Export</a>
+        <a href="{{ route('products.create') }}" class="btn custom-add btn-lg add-list">Add Product</a>
+    </div>
+</div>
 
         <div class="container-fluid">
             <form action="{{ route('products.index') }}" method="get" class="mb-3">
@@ -88,14 +87,12 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody >
+                            <tbody>
                                 @forelse ($products as $product)
                                     <tr>
-                                        <td>{{ $product->id}}</td>
+                                        <td>{{ $product->id }}</td>
                                         <td>
-                                            {{-- <img class="crm-profile-pic rounded-circle avatar-100" id="image-preview" src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.webp') }}" alt="profile-pic"> --}}
                                             <img class="product-image" src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.jpg') }}">
-                                            
                                         </td>
                                         <td>{{ $product->product_name }}</td>
                                         <td>{{ $product->product_code }}</td>
@@ -106,48 +103,44 @@
                                                 @method('delete')
                                                 @csrf
                                                 <div class="d-flex align-items-center list-action">
-                                                    <a class="btn btn-sm view-product-btn" 
-                                                    style="border-radius: 0; background-color: #13982d; color: rgb(255, 255, 255); border: none;" 
-                                                    data-id="{{ $product->id }}" data-toggle="modal" data-target="#productModal">
-                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-                                                         <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
-                                                         <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                                                     </svg> View
-                                                 </a>
-                                                 <a class="btn btn-sm edit-product-btn"
-                                                 style="border-radius: 0; background-color: #007bff; color: white; border: none;"
-                                                 data-id="{{ $product->id }}" 
-                                                 data-name="{{ $product->product_name }}"
-                                                 data-category="{{ $product->category_id }}"
-                                                 data-supplier="{{ $product->supplier_id }}"
-                                                 data-buying-price="{{ $product->buying_price }}"
-                                                 data-selling-price="{{ $product->selling_price }}"
-                                                   data-image="{{ asset('storage/products/'.$product->product_image) }}"
-                                                 {{-- data-image="{{ $product->product_image ? asset('storage/products/' . $product->product_image) : asset('assets/images/product/default.webp') }}" --}}
-                                                 data-toggle="modal" 
-                                                 data-target="#editProductModal">
-                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                                  </svg> Edit
-                                             </a>
-                                                    <button type="submit" class="btn btn-sm"style="border-radius: 0; background-color: #dc3545; color: white; border: none;"
-                                                     onclick="return confirm('Are you sure you want to delete this record?')"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                                      </svg> Delete</button>
+                                                    <!-- View button -->
+                                                    <a class="btn btn-sm view-product-btn" style="background-color: #13982d; color: #fff;" data-id="{{ $product->id }}" data-toggle="modal" data-target="#productModal">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                                                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                                                          </svg> 
+                                                        View
+                                                    </a>
+                                                    <!-- Edit button -->
+                                                    <a class="btn btn-sm edit-product-btn" style=" background-color: #007bff; color: white;" data-id="{{ $product->id }}" data-name="{{ $product->product_name }}" data-category="{{ $product->category_id }}" data-supplier="{{ $product->supplier_id }}" data-buying-price="{{ $product->buying_price }}" data-selling-price="{{ $product->selling_price }}" data-image="{{ asset('storage/products/'.$product->product_image) }}" data-toggle="modal" data-target="#editProductModal">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                                          </svg>
+                                                        Edit
+                                                    </a>
+                                                    <!-- Delete button -->
+                                                    <button type="submit" class="btn btn-sm" style="background-color: #dc3545; color: white;" onclick="return confirm('Are you sure you want to delete this record?')">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                                          </svg> 
+                                                        Delete
+                                                    </button>
                                                 </div>
                                             </form>
                                         </td>
                                     </tr>
                                 @empty
-                                    <div class="alert text-white bg-danger" role="alert">
-                                        <div class="iq-alert-text">Product Data not Found.</div>
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <i class="ri-close-line"></i>
-                                        </button>
-                                    </div>
-                                    @endforelse
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <div class="alert alert-danger mb-0" style="background: #f79994; color:#2e2a2a;" role="alert">
+                                                Product Data not Found.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
+                                                       
                         </table>
                     </div>
                     {{ $products->links() }}
@@ -210,78 +203,6 @@
         </div>
     </div>
 
-<!-- Edit Product Modal -->
-{{-- <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="editProductForm" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="_method" value="PUT">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <div class="modal-body">
-                    <input type="hidden" id="edit_product_id" name="id">
-
-                    <div class="form-group">
-                       
-                        <img class="crm-profile-pic rounded-circle avatar-100" id="image-preview" src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.webp') }}" alt="product_image">
-                    </div>
-                    <div class="input-group mb-4 col-lg-6">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input @error('product_image') is-invalid @enderror" id="product_image" name="product_image" accept="image/*" onchange="previewImage();">
-                            <label class="custom-file-label" for="product_image">Choose file</label>
-                        </div>
-                        @error('product_image')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_product_name">Product Name</label>
-                        <input type="text" class="form-control" id="edit_product_name" name="product_name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_category">Category</label>
-                        <select class="form-control" id="edit_category" name="category_id">
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_supplier">Supplier</label>
-                        <select class="form-control" id="edit_supplier" name="supplier_id">
-                            @foreach($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_buying_price">Buying Price</label>
-                        <input type="number" class="form-control" id="edit_buying_price" name="buying_price" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_selling_price">Selling Price</label>
-                        <input type="number" class="form-control" id="edit_selling_price" name="selling_price" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> --}}
 
 <!-- Edit Product Modal -->
 <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
@@ -303,11 +224,11 @@
                         <!-- Left Side: Product Image -->
                         <div class="col-md-4 text-center">
                             <div class="form-group">
-                                    <img id="image-preview" 
-                                    src="{{ $product->product_image ? asset('storage/products/'.$product->product_image) : asset('assets/images/product/default.webp') }}"
-                                    alt="product_image" class="img-fluid rounded"
-                                        style="width: 200px; height: 200px; object-fit: cover; border: 2px solid #ccc; margin-bottom: 10px;">
-
+                                <img id="image-preview" 
+                                src="{{ asset('assets/images/product/default.webp') }}"
+                                alt="product_image" class="img-fluid rounded"
+                                style="width: 200px; height: 200px; object-fit: cover; border: 2px solid #ccc; margin-bottom: 10px;">
+                            
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="product_image" name="product_image" accept="image/*" onchange="previewImage(event);">
                                     <label class="custom-file-label" for="product_image">Choose file</label>
@@ -320,43 +241,6 @@
                             </div>
                         </div>
 
-                        {{-- <!-- Right Side: Product Details -->
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label for="edit_product_name">Product Name</label>
-                                <input type="text" class="form-control" id="edit_product_name" name="product_name" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit_category">Category</label>
-                                <select class="form-control" id="edit_category" name="category_id">
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit_supplier">Supplier</label>
-                                <select class="form-control" id="edit_supplier" name="supplier_id">
-                                    @foreach($suppliers as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit_buying_price">Buying Price</label>
-                                <input type="number" class="form-control" id="edit_buying_price" name="buying_price" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="edit_selling_price">Selling Price</label>
-                                <input type="number" class="form-control" id="edit_selling_price" name="selling_price" required>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
                 <!-- Right Side: Product Details -->
                     <div class="col-md-8">
                         <div class="form-group row">
@@ -501,6 +385,58 @@ $(document).ready(function () {
 
 
 <style>
+
+.custom-import {
+    background-color: #19ac3c;
+    border-color: #28a745;
+    font-size: 16px;
+    color:#dee2e6;
+    border-radius: 5px !important;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.custom-import:hover {
+    background-color: #137c2a;
+    border-color: #1e7e34;
+    color: #dee2e6;
+    transform: scale(1.06);
+}
+
+.custom-export {
+    background-color: #dfb600;
+    /* border-color: #ffc107; */
+    font-size: 16px;
+    color:#05121f;
+    border-radius: 5px !important;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.custom-export:hover {
+    background-color: #d39e00;
+    border-color: #d39e00;
+    color:#010101;
+    transform: scale(1.06);
+}
+
+.custom-add {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-size: 16px;
+    color:#dee2e6;
+    border-radius: 5px !important;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+
+.custom-add:hover {
+    background-color: #0060c7;
+    border-color: #0062cc;
+    color: #ffffff;
+    transform: scale(1.06);
+}
+
+
+
     /* Product Image */
     .product-image {
         width: 53px; /* Adjust width */
@@ -516,18 +452,18 @@ $(document).ready(function () {
         padding: 10px 10px; /* Adjust padding */
         font-size: 14px !important; /* Adjust font size */
         margin-right: 4px; /* Add space between buttons */
-        border-radius: 2px !important; /* Rounded corners */
+        border-radius: 10px !important; /* Rounded corners */
     }
     
-    .list-action .btn i {
-        font-size: 14px; /* Adjust icon size */
+    .list-action .btn:hover {
+        transform: scale(1.07);
     }
     
     /* Status Stocks Badges */
     .badge {
         font-size: 12px; /* Adjust font size */
-        padding: 5px 8px; /* Adjust padding */
-        border-radius: 12px; /* Rounded corners */
+        padding: 5px 5px; /* Adjust padding */
+        border-radius: 8px; /* Rounded corners */
         text-transform: uppercase; /* Make text uppercase */
     }
     

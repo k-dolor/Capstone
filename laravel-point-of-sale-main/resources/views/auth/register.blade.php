@@ -96,7 +96,7 @@
     height: 100vh;
     /* background: linear-gradient(to right, #f57e20, #0066cc); */
     /* background: linear-gradient(to top, #d0aa88, #f98227); */
-    background: linear-gradient(to top, #ffb50a, #ff7c17);
+    background: linear-gradient(to bottom, #c08a0b, #b0450f);
     display: flex;
     align-items: center;
     justify-content: center;

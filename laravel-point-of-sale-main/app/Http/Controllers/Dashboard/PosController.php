@@ -9,16 +9,38 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\DB;
+
 
 class PosController extends Controller
 {    
-    public function index()
+//     public function index()
+// {
+//     $row = (int) request('row', 20);
+
+//     if ($row < 1 || $row > 100) {
+//         abort(400, 'The per-page parameter must be an integer between 1 and 100.');
+//     }
+
+//     return view('pos.index', [
+//         'customers' => Customer::all()->sortBy('name'),
+//         'productItem' => Cart::content(),
+//         'products' => Product::filter(request(['search']))
+//             ->sortable()
+//             ->paginate($row)
+//             ->appends(request()->query()),
+//     ]);
+// }
+
+public function index()
 {
     $row = (int) request('row', 20);
-
     if ($row < 1 || $row > 100) {
         abort(400, 'The per-page parameter must be an integer between 1 and 100.');
     }
+
+    // Fetch VAT from settings table
+    $vat = DB::table('orders')->value('vat'); 
 
     return view('pos.index', [
         'customers' => Customer::all()->sortBy('name'),
@@ -27,44 +49,58 @@ class PosController extends Controller
             ->sortable()
             ->paginate($row)
             ->appends(request()->query()),
+        'vat' => $vat, // Pass VAT to the view
     ]);
 }
 
 
+// OLD WORKING--------------------------
 
-    public function addCart(Request $request)
-    {
-        $rules = [
-            'id' => 'required|numeric',
-            'name' => 'required|string',
-            'price' => 'required|numeric',
-        ];
-
-        $validatedData = $request->validate($rules);
-
-        Cart::add([
-            'id' => $validatedData['id'],
-            'name' => $validatedData['name'],
-            'qty' => 1,
-            'price' => $validatedData['price'],
-            'options' => ['size' => 'large']
-        ]);
-
-        return Redirect::back()->with('success', 'Product has been added!');
-    }
-
-    // public function updateCart(Request $request, $rowId)
+    // public function addCart(Request $request)
     // {
     //     $rules = [
-    //         'qty' => 'required|numeric',
+    //         'id' => 'required|numeric',
+    //         'name' => 'required|string',
+    //         'price' => 'required|numeric',
     //     ];
 
     //     $validatedData = $request->validate($rules);
 
-    //     Cart::update($rowId, $validatedData['qty']);
+    //     Cart::add([
+    //         'id' => $validatedData['id'],
+    //         'name' => $validatedData['name'],
+    //         'qty' => 1,
+    //         'price' => $validatedData['price'],
+    //         // 'options' => ['size' => 'large']
+    //     ]);
 
-    //     return Redirect::back()->with('success', 'Cart has been updated!');
+    //     return Redirect::back()->with('success', 'Product has been added!');
     // }
+
+
+    public function addCart(Request $request)
+{
+    $rules = [
+        'id' => 'required|numeric',
+        'name' => 'required|string',
+        'price' => 'required|numeric',
+    ];
+
+    $validatedData = $request->validate($rules);
+
+    // Store the full price (which already includes tax)
+    Cart::add([
+        'id' => $validatedData['id'],
+        'name' => $validatedData['name'],
+        'qty' => 1,
+        'price' => $validatedData['price'], // Keep the displayed price as is
+        'options' => ['size' => 'large'] // No tax computation here yet
+    ]);
+
+    return Redirect::back()->with('success', 'Product has been added!');
+}
+
+
     public function updateCart(Request $request, $rowId)
 {
     $request->validate([
@@ -115,4 +151,5 @@ class PosController extends Controller
             'content' => $content
         ]);
     }
+    
 }

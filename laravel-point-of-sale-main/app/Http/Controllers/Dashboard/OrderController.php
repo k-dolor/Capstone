@@ -235,14 +235,101 @@ class OrderController extends Controller
 //     return redirect()->route('invoice.show', ['order_id' => $order_id]);
 // }
 ///NEW WITHOUT PROCEEDING IF PAYMENT IS LESS THAN TOTAL//
+// public function storeOrder(Request $request)
+// {
+//     // Validation rules
+//     $rules = [
+//         'customer_name' => 'nullable|string|max:255',
+//         'payment_status' => 'required|string',
+//         'pay' => 'nullable|numeric|min:0',
+//         'discount' => 'nullable|numeric|min:0|max:100',
+//     ];
+
+//     // Validate the request data
+//     $validatedData = $request->validate($rules);
+
+//     // Generate a unique invoice number
+//     $invoice_no = IdGenerator::generate([
+//         'table' => 'orders',
+//         'field' => 'invoice_no',
+//         'length' => 10,
+//         'prefix' => 'INV-'
+//     ]);
+
+//     // Get discount value (default to 0 if not provided)
+//     $discount = $request->input('discount', 0);
+
+//     // Calculate the total after discount
+//     // $subTotal = Cart::subtotal();
+//     // $vat = Cart::tax();
+//     $rawTotal = floatval(Cart::subtotal(2, '.', '')); // e.g., 1225.00
+//     $vatRate = 12; // or retrieve dynamically from the database
+//     $totalBeforeDiscount = $subTotal + $vat;
+//     $discountAmount = $totalBeforeDiscount * ($discount / 100);
+//     $totalAfterDiscount = $totalBeforeDiscount - $discountAmount;
+
+//     // Get the payment amount (default to 0 if not provided)
+//     $payAmount = $validatedData['pay'] ?? 0;
+
+//     // Check if payment is sufficient
+//     if ($payAmount < $totalAfterDiscount) {
+//         return redirect()->back()
+//             ->withInput() // Keeps previous inputs so the user doesn't have to re-enter data
+//             ->with('error', 'Payment is insufficient! Please pay at least ₱' . number_format($totalAfterDiscount, 2) . ' to complete the order.');
+//     }
+
+//     // Prepare order data
+//     $validatedData['order_date'] = Carbon::now();
+//     $validatedData['order_status'] = 'complete';
+//     $validatedData['total_products'] = Cart::count();
+//     $validatedData['sub_total'] = $subTotal;
+//     $validatedData['vat'] = $vat;
+//     $validatedData['invoice_no'] = $invoice_no;
+//     $validatedData['discount'] = $discountAmount;
+//     $validatedData['total'] = $totalAfterDiscount;
+//     $validatedData['due'] = $totalAfterDiscount - $payAmount;
+//     $validatedData['created_at'] = Carbon::now();
+
+//     // Insert order and get the ID
+//     $order_id = Order::insertGetId($validatedData);
+
+//     // Create Order Details and Deduct Stock
+//     $contents = Cart::content();
+//     $oDetails = [];
+
+//     foreach ($contents as $content) {
+//         $oDetails[] = [
+//             'order_id' => $order_id,
+//             'product_id' => $content->id,
+//             'quantity' => $content->qty,
+//             'unitcost' => $content->price,
+//             'total' => $content->total,
+//             'created_at' => Carbon::now(),
+//         ];
+
+//         // Deduct stock
+//         Product::where('id', $content->id)
+//             ->decrement('product_store', $content->qty);
+//     }
+
+//     // Insert all order details at once
+//     OrderDetails::insert($oDetails);
+
+//     // Clear the shopping cart
+//     Cart::destroy();
+
+//     // Redirect to the invoice page with the order ID
+//     return redirect()->route('invoice.show', ['order_id' => $order_id]);
+// }
+///NEW WITH correct VAT//
 public function storeOrder(Request $request)
 {
     // Validation rules
     $rules = [
-        'customer_name' => 'nullable|string|max:255',
+        'customer_name'  => 'nullable|string|max:255',
         'payment_status' => 'required|string',
-        'pay' => 'nullable|numeric|min:0',
-        'discount' => 'nullable|numeric|min:0|max:100',
+        'pay'            => 'nullable|numeric|min:0',
+        'discount'       => 'nullable|numeric|min:0|max:100',
     ];
 
     // Validate the request data
@@ -250,8 +337,8 @@ public function storeOrder(Request $request)
 
     // Generate a unique invoice number
     $invoice_no = IdGenerator::generate([
-        'table' => 'orders',
-        'field' => 'invoice_no',
+        'table'  => 'orders',
+        'field'  => 'invoice_no',
         'length' => 10,
         'prefix' => 'INV-'
     ]);
@@ -259,11 +346,24 @@ public function storeOrder(Request $request)
     // Get discount value (default to 0 if not provided)
     $discount = $request->input('discount', 0);
 
-    // Calculate the total after discount
-    $subTotal = Cart::subtotal();
-    $vat = Cart::tax();
-    $totalBeforeDiscount = $subTotal + $vat;
+    // Use raw numeric value from Cart for accurate calculations.
+    // This value is VAT-inclusive.
+    $rawSubtotal = floatval(Cart::subtotal(2, '.', '')); // For example, 1225.00
+
+    // Define VAT rate (adjust if necessary)
+    $vatRate = 12; // 12%
+
+    // Extract VAT from the raw subtotal
+    $vat = $rawSubtotal * ($vatRate / (100 + $vatRate)); 
+    $subTotalWithoutVAT = $rawSubtotal - $vat; // Base price (without VAT)
+
+    // Calculate total before discount (in VAT-inclusive system, it's the raw subtotal)
+    $totalBeforeDiscount = $rawSubtotal;
+
+    // Calculate discount amount
     $discountAmount = $totalBeforeDiscount * ($discount / 100);
+
+    // Calculate total after discount
     $totalAfterDiscount = $totalBeforeDiscount - $discountAmount;
 
     // Get the payment amount (default to 0 if not provided)
@@ -277,16 +377,16 @@ public function storeOrder(Request $request)
     }
 
     // Prepare order data
-    $validatedData['order_date'] = Carbon::now();
-    $validatedData['order_status'] = 'complete';
-    $validatedData['total_products'] = Cart::count();
-    $validatedData['sub_total'] = $subTotal;
-    $validatedData['vat'] = $vat;
-    $validatedData['invoice_no'] = $invoice_no;
-    $validatedData['discount'] = $discountAmount;
-    $validatedData['total'] = $totalAfterDiscount;
-    $validatedData['due'] = $totalAfterDiscount - $payAmount;
-    $validatedData['created_at'] = Carbon::now();
+    $validatedData['order_date']    = Carbon::now();
+    $validatedData['order_status']  = 'complete';
+    $validatedData['total_products']= Cart::count();
+    $validatedData['sub_total']     = $subTotalWithoutVAT; // Base price without VAT
+    $validatedData['vat']           = $vat;
+    $validatedData['invoice_no']    = $invoice_no;
+    $validatedData['discount']      = $discountAmount;
+    $validatedData['total']         = $totalAfterDiscount;
+    $validatedData['due']           = $totalAfterDiscount - $payAmount;
+    $validatedData['created_at']    = Carbon::now();
 
     // Insert order and get the ID
     $order_id = Order::insertGetId($validatedData);
@@ -297,11 +397,11 @@ public function storeOrder(Request $request)
 
     foreach ($contents as $content) {
         $oDetails[] = [
-            'order_id' => $order_id,
+            'order_id'   => $order_id,
             'product_id' => $content->id,
-            'quantity' => $content->qty,
-            'unitcost' => $content->price,
-            'total' => $content->total,
+            'quantity'   => $content->qty,
+            'unitcost'   => $content->price,
+            'total'      => $content->total,
             'created_at' => Carbon::now(),
         ];
 
@@ -319,6 +419,7 @@ public function storeOrder(Request $request)
     // Redirect to the invoice page with the order ID
     return redirect()->route('invoice.show', ['order_id' => $order_id]);
 }
+
 
 
 /////////OLD WORKING//////////////021225/

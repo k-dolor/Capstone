@@ -171,7 +171,7 @@ thead th {
 }
 </style>
 
-<h1 class="text-center" style="font-family: 'Poppins', sans-serif;">Order Transactions</h1>
+<h1 class="text-center" style="font-family: 'Poppins', sans-serif; color: rgb(42, 23, 5);">Order Transactions</h1>
 
 <div class="container-fluid">
     <!-- Filter Form -->

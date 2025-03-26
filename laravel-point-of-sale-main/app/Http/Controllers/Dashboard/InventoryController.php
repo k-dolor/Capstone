@@ -34,23 +34,29 @@ class InventoryController extends Controller
              $query->where('category_id', request('category'));
          }
      
-         // Get products from the database
-         $products = $query->sortable()->get();
-     
-         // Apply stock status filter dynamically
-         if (request('stock_status')) {
-             $products = $products->filter(function ($product) {
-                 $stockStatus = $this->getStockStatus($product);
-                 switch (request('stock_status')) {
-                     case 'in_stock':
-                         return $stockStatus === 'IN STOCK';
-                     case 'low_stock':
-                         return $stockStatus === 'LOW STOCK';
-                     case 'out_of_stock':
-                         return $stockStatus === 'OUT OF STOCK';
-                 }
-             });
-         }
+         // Get products from the database (as a collection).
+            $products = $query->sortable()->get();
+
+            // Apply stock status filter dynamically if set.
+            if (request('stock_status')) {
+                $products = $products->filter(function ($product) {
+                    // Call your helper method to get the stock status.
+                    $stockStatus = $this->getStockStatus($product);
+                    
+                    // Compare based on the selected filter.
+                    switch (request('stock_status')) {
+                        case 'in_stock':
+                            return $stockStatus === 'IN STOCK';
+                        case 'low_stock':
+                            return $stockStatus === 'LOW STOCK';
+                        case 'out_of_stock':
+                            return $stockStatus === 'OUT OF STOCK';
+                        default:
+                            return true;
+                    }
+                });
+            }
+
      
          // Check if no products are found
          $noProducts = $products->isEmpty();
@@ -77,16 +83,31 @@ class InventoryController extends Controller
 /**
  * Determine the stock status of a product.
  */
-private function getStockStatus($product)
+// private function getStockStatus($product)
+// {
+//     if ($product->product_store > 5) {
+//         return 'IN STOCK';
+//     } elseif ($product->product_store > 0) {
+//         return 'LOW STOCK';
+//     } else {
+//         return 'OUT OF STOCK';
+//     }
+// }
+
+protected function getStockStatus(Product $product)
 {
-    if ($product->product_store > 5) {
-        return 'IN STOCK';
-    } elseif ($product->product_store > 0) {
-        return 'LOW STOCK';
-    } else {
+    // If stock is 0 or less, it's "OUT OF STOCK"
+    if ($product->product_store <= 0) {
         return 'OUT OF STOCK';
     }
+    // If stock is less than 10, consider it "LOW STOCK"
+    elseif ($product->product_store < 10) {
+        return 'LOW STOCK';
+    }
+    // Otherwise, it's "IN STOCK"
+    return 'IN STOCK';
 }
+
 
   /////////////////////////////////////////////////////
 
