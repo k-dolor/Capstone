@@ -1,0 +1,282 @@
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Keep the content spaced out without overlap */
+            height: 80%; /* Ensure the card takes up only as much space as needed */
+        }
+
+        /* Ensure that the card image and overlay have their own dedicated space */
+        .card .position-relative {
+            margin-bottom: 0; /* Remove space below image */
+        }
+
+        .card .card-img-top {
+            object-fit: contain;
+            width: 100%;
+            height: 150px; /* Fix the image height to avoid overflow */
+        }
+
+        /* Position the overlay correctly at the bottom of the image */
+        .card .position-absolute {
+            bottom: 0;
+            start: 0;
+            width: 100%;
+            padding: 8px !important;
+            text-align: center;
+            background: rgba(42, 42, 42, 0.903) !important;
+        }
+
+        .row.g-0 {
+            margin-left: -8px;  /* Negative margin for tight fit */
+            margin-right: -8px;
+        }
+
+        /* Custom spacing for small gap (0.25 inches) between cards */
+        .col-md-4 {
+            padding: 4px; /* Adds a small 4px padding around the card */
+        }
+
+        .product-card {
+            margin-bottom: 0; /* Ensure no margin below the cards */
+            height: auto; /* Allow the height to be adjusted based on content */
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            border-bottom: 2px solid #ddd;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+        }
+
+        .table tbody td {
+            vertical-align: middle;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .text-danger {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Target only the Add buttons in product cards */
+        .card .card-body button.btn-primary {
+            position: relative; /* Ensure this only affects Add buttons */
+            margin-top: 0px;   /* Add space above the button */
+        }
+
+        /* Add padding below the product image to ensure enough space for the button */
+        .card-img-top {
+            margin-bottom: 0px;
+        }
+
+        /* Adjust the button styling to remove extra space */
+        .product-card .card-body button {
+            background-color: #28a745; /* Green background color */
+            color: white; /* White text color */
+            font-size: 24px; /* Larger text size */
+            font-weight: bold; /* Bold text */
+            border: none; /* Remove default border */
+            border-radius: 8px; /* Slightly rounded corners */
+            width: 70%; /* Make the button stretch the width of the card */
+            padding: 5px; /* Add some padding for height */
+            text-align: center; /* Center the text */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            margin-top: 0; /* Remove extra space below the image and above the button */
+            margin-bottom: 0%;
+        }
+
+        /* Add hover effect for better UX */
+        .product-card .card-body button:hover {
+            background-color: #0f6422; /* Darker green on hover */
+        }
+
+        /* Remove hover effect from product cards */
+        .card:hover {
+            transform: scale(1); /* Remove transformation */
+        }
+
+        /* Invoice card with flexible height */
+        .card.invoice-card {
+            height: auto; /* Make sure the height adapts to the content inside */
+            min-height: 400px; /* Optional: Set a minimum height to ensure it has enough space */
+            display: flex;
+            flex-direction: column; /* Allow the card content to be vertically arranged */
+        }
+
+        /* Ensure the content within the card is aligned properly */
+        .card.invoice-card .card-body {
+            flex-grow: 1; /* Allow the body to grow and take available space */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Ensure content is spaced evenly */
+        }
+
+        /* Adjust table styling to prevent overflow */
+        .table-responsive {
+            overflow-x: auto; /* Prevent table overflow if necessary */
+        }
+
+        /* Make sure the total section stays at the bottom */
+        .card-footer {
+            margin-top: auto; /* Push the total section to the bottom of the card */
+        }
+
+        /* Make the product grid scrollable and keep search bar + category outside */
+        .product-grid-container {
+            max-height: 500px; /* Limit the height of the grid */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px; /* Adjust for the scrollbar */
+        }
+
+        /* Customize the scrollbar to be modern */
+        .product-grid-container::-webkit-scrollbar {
+            width: 8px; /* Narrow width */
+            background-color: #f1f1f1; /* Light background for the scrollbar */
+        }
+
+        .product-grid-container::-webkit-scrollbar-thumb {
+            background-color: #888; /* Scrollbar thumb color */
+            border-radius: 4px; /* Rounded corners */
+        }
+
+        .product-grid-container::-webkit-scrollbar-thumb:hover {
+            background-color: #555; /* Darker thumb on hover */
+        }
+
+        .product-grid-container::-webkit-scrollbar-track {
+            background-color: #f1f1f1; /* Track background */
+        }
+
+        /* Optional: Add smooth scrolling */
+        .product-grid-container {
+            scroll-behavior: smooth;
+        }
+
+        /* Ensure the invoice card stays in place on the right */
+        .col-lg-7 {
+            width: 58% !important; /* Adjust width of the product grid column */
+        }
+
+        .col-lg-5 {
+            width: 42% !important; /* Adjust width of the invoice column */
+        }
+
+        .btn-danger {
+            background-color: #dc3545 !important;  /* Red background */
+            border: none;
+            font-size: 14px !important; /* Adjust font size */
+            padding: 5px 8px !important; /* Adjust padding (height and width) */
+            border-radius: 3px !important; /* Adjust border radius if needed */
+        }
+
+        .btn-danger:hover {
+            background-color: #9b0c1a !important;  /* Darker red on hover */
+        }
+
+        .btn-order {
+            background-color: #0c9e4b !important;  /* Red background */
+            border: none;
+            font-size: 14px !important; /* Adjust font size */
+            color: white !important;
+            padding: 5px 10px !important; /* Adjust padding (height and width) */
+            border-radius: 3px !important; /* Adjust border radius if needed */
+        }
+
+        .btn-order:hover {
+            background-color: #027733 !important;  /* Darker red on hover */
+        }
+
+        .btn-primary-search {
+            background-color: #008fe8 !important;  /* Red background */
+            border: none;
+            font-size: 14px !important; /* Adjust font size */
+            font-weight: bold !important;
+            color: white !important;
+            padding: 10px 10px !important; /* Adjust padding (height and width) */
+            border-radius: 0px !important; /* Adjust border radius if needed */
+            height: 100%;
+        }
+
+        .btn-primary-search:hover {
+            background-color: #004bc4 !important;  /* Darker red on hover */
+        }
+
+        .clear-btn {
+            background-color: #626262 !important;  /* Red background */
+            border: none;
+            font-size: 14px !important; /* Adjust font size */
+            font-weight: bold !important;
+            color: white !important;
+            padding: 10px 10px !important; /* Adjust padding (height and width) */
+            border-radius: 0px !important; /* Adjust border radius if needed */
+            height: 100%;
+        }
+
+        .clear-btn:hover {
+            background-color: #515151 !important;  /* Darker red on hover */
+        }
+
+        /* Style for the invoice card */
+        .invoice-card {
+            border-radius: 8px; /* Optional: Rounded corners for the card */
+            border: 1px solid #ddd; /* Optional: Border for the card */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add some shadow to the card */
+        }
+
+        /* Style for the card header */
+        .invoice-card .card-header {
+            background-color: #f25939 !important; /* Change the background color here */
+            color: rgb(255, 255, 255); /* Text color inside the header */
+            padding: 15px !important; /* Adjust padding if needed */
+            border-radius: 8px 8px 0 0 !important;
+
+            
+        }
+
+        /* Style for the modal header */
+        .modal-header.bg-primary {
+            background-color: #f25939 !important; /* Change the background color here */
+            color: white !important; /* Change the text color */
+        }
+
+        /* Optional: Hover effect for the close button */
+        .modal-header .close:hover {
+            color: #fff; /* Color when the close button is hovered */
+        }
+
+        /* Optional: Change background color for modal header on hover */
+        .modal-header.bg-primary:hover {
+            background-color: #2980b9 !important; /* Darker shade for hover effect */
+        }
+
+        /* Custom button style */
+        .btn-custom {
+            background-color: #f25939 !important; /* Set background color */
+            color: white !important; /* Set text color */
+            font-size:18px !important;
+            font-weight: bolder !important;
+            border: none; /* Remove border */
+            padding: 10px 10px !important; /* Adjust padding (height and width) */
+        }
+
+        /* Button hover effect */
+        .btn-custom:hover {
+            background-color: #bd3e08 !important; /* Darker shade for hover effect */
+            color: white; /* Keep text white on hover */
+        }
+
+

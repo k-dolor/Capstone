@@ -60,6 +60,10 @@ Route::get('/', function () {
     // ====== USERS ====
 
     Route::resource('/users', UserController::class)->except(['show']);
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+
 
     // ====== CUSTOMERS ======
 
@@ -125,10 +129,20 @@ Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory
 //////////////////NOTIFICATION
 
 
-Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+// Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
-Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-Route::post('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+// Route::get('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+// Route::post('/notifications/read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+// Route::get('/fetch-notifications', [NotificationController::class, 'fetchNotifications']);
+// Route::post('/mark-notification/{id}', [NotificationController::class, 'markAsRead']);
+// Route::post('/create-notification', [NotificationController::class, 'createNotification']);
+// Route::post('/notifications/{id}/read', [InventoryController::class, 'markAsRead'])->name('notifications.read');
+// Route::get('/notifications', [NotificationController::class, 'fetchNotifications'])->name('notifications.get');
+// Route::post('/notifications/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+// Route::get('/notifications', [NotificationController::class, 'getNotifications'])->name('notifications.get');
+Route::get('/notifications', [NotificationController::class, 'fetchNotifications']);
+Route::post('/notifications/read/{id}', [NotificationController::class, 'markAsRead']);
 
 
     

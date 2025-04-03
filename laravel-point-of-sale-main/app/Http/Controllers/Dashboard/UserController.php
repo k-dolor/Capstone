@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $row = (int) request('row', 10);
+        $row = (int) request('row', 5);
 
         if ($row < 1 || $row > 100) {
             abort(400, 'The per-page parameter must be an integer between 1 and 100.');
@@ -42,52 +42,148 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $rules = [
-            'name' => 'required|max:50',
-            'photo' => 'image|file|max:1024',
-            'email' => 'required|email|max:50|unique:users,email',
-            'username' => 'required|min:4|max:25|alpha_dash:ascii|unique:users,username',
-            'password' => 'min:6|required_with:password_confirmation',
-            'password_confirmation' => 'min:6|same:password',
-        ];
+    // public function store(Request $request)
+    // {
+    //     $rules = [
+    //         'name' => 'required|max:50',
+    //         'photo' => 'image|file|max:1024',
+    //         'email' => 'required|email|max:50|unique:users,email',
+    //         'username' => 'required|min:4|max:25|alpha_dash:ascii|unique:users,username',
+    //         'password' => 'min:6|required_with:password_confirmation',
+    //         'password_confirmation' => 'min:6|same:password',
+    //     ];
 
-        $validatedData = $request->validate($rules);
-        $validatedData['password'] = Hash::make($request->password);
+    //     $validatedData = $request->validate($rules);
+    //     $validatedData['password'] = Hash::make($request->password);
 
-        /**
-         * Handle upload image with Storage.
-         */
-        if ($file = $request->file('photo')) {
-            $fileName = hexdec(uniqid()).'.'.$file->getClientOriginalExtension();
-            $path = 'public/profile/';
+    //     /**
+    //      * Handle upload image with Storage.
+    //      */
+    //     if ($file = $request->file('photo')) {
+    //         $fileName = hexdec(uniqid()).'.'.$file->getClientOriginalExtension();
+    //         $path = 'public/profile/';
 
-            $file->storeAs($path, $fileName);
-            $validatedData['photo'] = $fileName;
-        }
+    //         $file->storeAs($path, $fileName);
+    //         $validatedData['photo'] = $fileName;
+    //     }
 
-        $user = User::create($validatedData);
+    //     $user = User::create($validatedData);
 
-        if($request->role) {
-            $role = Role::find($request->role);
-            if ($role) {
-                $user->assignRole($role->name);
-            }
-        }
+    //     if($request->role) {
+    //         $role = Role::find($request->role);
+    //         if ($role) {
+    //             $user->assignRole($role->name);
+    //         }
+    //     }
         
 
-        return Redirect::route('users.index')->with('success', 'New User has been created!');
+    //     return Redirect::route('users.index')->with('success', 'New User has been created!');
+    // }
+    public function store(Request $request) 
+{
+    $rules = [
+        'name' => 'required|max:50',
+        'photo' => 'image|file|max:1024',
+        'email' => 'required|email|max:50|unique:users,email',
+        'username' => 'required|min:4|max:25|alpha_dash:ascii|unique:users,username',
+        'password' => 'min:6|required_with:password_confirmation',
+        'password_confirmation' => 'min:6|same:password',
+    ];
+
+    $validatedData = $request->validate($rules);
+    $validatedData['password'] = Hash::make($request->password);
+
+    // Set email as verified so that login can work immediately
+    $validatedData['email_verified_at'] = now();
+
+    /**
+     * Handle upload image with Storage.
+     */
+    if ($file = $request->file('photo')) {
+        $fileName = hexdec(uniqid()).'.'.$file->getClientOriginalExtension();
+        $path = 'public/profile/';
+
+        $file->storeAs($path, $fileName);
+        $validatedData['photo'] = $fileName;
     }
+
+    $user = User::create($validatedData);
+
+    if($request->role) {
+        $role = Role::find($request->role);
+        if ($role) {
+            $user->assignRole($role->name);
+        }
+    }
+    
+    return Redirect::route('users.index')->with('success', 'New User has been created!');
+}
+
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
-    {
-        //
+//     public function show($id)
+// {
+//     $user = User::where('username', $id)->firstOrFail();
+
+//     return response()->json([
+//         'id' => $user->id,
+//         'name' => $user->name,
+//         'username' => $user->username,
+//         'email' => $user->email,
+//         'role' => $user->role,
+//         'photo' => $user->photo ? asset('storage/profile/' . $user->photo) : asset('assets/images/user/1.png')
+//     ]);
+// }
+// public function show($id)
+// {
+//     $user = User::find($id);
+
+//     if (!$user) {
+//         return response()->json(['error' => 'User not found'], 404);
+//     }
+
+//     // Get role (if using roles, otherwise return 'No Role Assigned')
+//     $role = $user->roles->first() ? $user->roles->first()->name : 'No Role Assigned';
+
+//     return response()->json([
+//         'id' => $user->id,
+//         'name' => $user->name,
+//         'username' => $user->username,
+//         'email' => $user->email,
+//         'photo' => $user->photo ? asset('storage/profile/' . $user->photo) : asset('assets/images/user/1.png'),
+//         'role' => $role,
+//     ]);
+// }
+public function show($id)
+{
+    $user = User::find($id);
+
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
     }
 
+    // Get the user's role (if using roles, otherwise return 'No Role Assigned')
+    $role = $user->roles->first() ? $user->roles->first()->name : 'No Role Assigned';
+
+    return response()->json([
+        'id' => $user->id,
+        'name' => $user->name,
+        'username' => $user->username, // Ensure this column exists in the users table
+        'email' => $user->email,
+        'photo' => $user->photo ? asset('storage/profile/' . $user->photo) : asset('assets/images/user/1.png'),
+        'role' => $role, // If roles are not set up, return 'No Role Assigned'
+    ]);
+}
+
+
+
+
+
+    
+
+    
     /**
      * Show the form for editing the specified resource.
      */
@@ -154,17 +250,31 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    // public function destroy(User $user)
+    // {
+    //     /**
+    //      * Delete photo if exists.
+    //      */
+    //     if($user->photo){
+    //         Storage::delete('public/profile/' . $user->photo);
+    //     }
+
+    //     User::destroy($user->id);
+
+    //     return Redirect::route('users.index')->with('success', 'User has been deleted!');
+    // }
+    // Delete user
+    public function destroy($id)
     {
-        /**
-         * Delete photo if exists.
-         */
-        if($user->photo){
+        $user = User::findOrFail($id);
+
+        // Delete photo if exists
+        if ($user->photo) {
             Storage::delete('public/profile/' . $user->photo);
         }
 
-        User::destroy($user->id);
+        $user->delete();
 
-        return Redirect::route('users.index')->with('success', 'User has been deleted!');
+        return response()->json(['success' => 'User deleted successfully']);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
@@ -42,6 +43,29 @@ public function index()
     // Fetch VAT from settings table
     $vat = DB::table('orders')->value('vat'); 
 
+    
+    $lowStockThreshold = 10; // Customize the threshold as needed
+
+    // Fetch low-stock products
+    $lowStockProducts = Product::where('product_store', '<=', $lowStockThreshold)->get();
+
+    // Create notifications for low-stock products (if not already created for this session)
+    foreach ($lowStockProducts as $product) {
+        if (!Notification::where('product_id', $product->id)->where('is_read', false)->exists()) {
+            Notification::create([
+                'product_id' => $product->id,
+                'user_id' => auth()->id(), // Current user
+                'message' => "Low stock alert: {$product->product_name} ({$product->product_store} left)",
+                'is_read' => false
+            ]);
+        }
+    }
+
+    // Fetch unread notifications
+    $notifications = Notification::where('user_id', auth()->id())->where('is_read', false)->get();
+
+
+
     return view('pos.index', [
         'customers' => Customer::all()->sortBy('name'),
         'productItem' => Cart::content(),
@@ -50,6 +74,7 @@ public function index()
             ->paginate($row)
             ->appends(request()->query()),
         'vat' => $vat, // Pass VAT to the view
+        'notifications' => $notifications,
     ]);
 }
 

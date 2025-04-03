@@ -6,6 +6,7 @@ use Kyslik\ColumnSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Notification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 
 class Product extends Model
 {
@@ -90,6 +91,22 @@ public function updateStock(Request $request, $id)
     }
 
     return redirect()->back()->with('success', 'Stock updated successfully.');
+}
+
+
+public function lastStockIn()
+{
+    return $this->hasOne(StockInHistory::class)->latest('added_at'); // Use 'added_at' instead of 'stock_in_date'
+}
+
+public function getLastRestockDateAttribute()
+    {
+        return optional($this->lastStockIn)->added_at ? Carbon::parse($this->lastStockIn->added_at) : null;
+    }
+
+public function getLastRestockQuantityAttribute()
+{
+    return optional($this->lastStockIn)->quantity_added;
 }
 
 

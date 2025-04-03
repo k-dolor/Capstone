@@ -10,10 +10,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 :root {
   --iq-primary: #32BDEA;
-  --iq-secondary: #FF7E41;
-  --iq-success: #78C091;
+  --iq-secondary: #ff6d29;
+  --iq-success: #00be42;
   --iq-info: #7EE2FF;
-  --iq-warning: #FF9770;
+  --iq-warning: #fd1b1b;
   --iq-danger: #E08DB4;
   --iq-light: #c7cbd3;
   --iq-dark: #01041b;
@@ -23,7 +23,7 @@
   --iq-light-gray: #f4f5fa;
   --iq-primary: #32BDEA;
   --iq-secondary: #FF7E41;
-  --iq-success: #78C091;
+  --iq-success: #026f29;
   --iq-info: #7EE2FF;
   --iq-warning: #FF9770;
   --iq-danger: #E08DB4;
@@ -51,7 +51,7 @@
   --skyblue: #158df7;
   --primary: #32BDEA;
   --secondary: #FF7E41;
-  --success: #78C091;
+  --success: #026f29;
   --info: #7EE2FF;
   --warning: #FF9770;
   --danger: #E08DB4;

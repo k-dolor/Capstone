@@ -56,9 +56,7 @@
                                     </div>
                                     <div>
                                     <a href="{{ route('users.create') }}" class="btn btn-primary add-list" style="border-radius: 2; background-color: #1f61d2; color: white; border: none; ">
-                                        {{-- <i class="fa-solid fa-plus mr-3"></i> --}}
                                         Create User</a>
-                                    {{-- <a href="{{ route('users.index') }}" class="btn btn-danger add-list"><i class="fa-solid fa-trash mr-3"></i>Clear Search</a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -83,10 +81,6 @@
                                             <div class="form-group mb-0 flex-grow-1 me-2">
                                                 <input type="text" id="search" class="form-control search-input" name="search" placeholder="Search by Name/Username" value="{{ request('search') }}">
                                             </div>
-                                            
-                                            
-                                            
-                            
                             
                                             <div class="form-group mb-0 d-flex">
                                                 <button type="submit" class="btn btn-custom-search me-2">
@@ -100,20 +94,23 @@
                                     </div>
                                 </form>
                             </div>
-
+                            <div id="deleteSuccessMessage" class="alert alert-success text-center" style="display: none; position: fixed; top: 20px; right: 10px; z-index: 1050;">
+                                ✅ User deleted successfully!
+                            </div>
+                            
                             <div class="col-lg-12">
                                 <div class="card">
                                 </div>
                                 <div class="card-body"  style="background: white;">
                                 <div class="table-responsive rounded mb-3">
                                     <table class="table table-bordered table-striped">
-                                        <thead style="background-color: #dfe3e8;">
+                                        <thead style="background-color: #dbe5f1;">
                                             <tr>
                                                 <th>No.</th>
                                                 <th>Photo</th>
                                                 <th>@sortablelink('name')</th>
                                                 <th>@sortablelink('username')</th>
-                                                <th>@sortablelink('email')</th>
+                                                <th>Email</th>
                                                 <th>Role</th>
                                                 <th>Action</th>
                                             </tr>
@@ -130,23 +127,41 @@
                                                 <td>{{ $item->email }}</td>
                                                 <td>
                                                     @foreach ($item->roles as $role)
-                                                        <span class="badge bg-danger">{{ $role->name }}</span>
+                                                        @if($role->name === 'SuperAdmin')
+                                                            <span class="custom-badge super-admin">{{ $role->name }}</span>
+                                                        @else
+                                                            <span class="custom-badge user-role">{{ $role->name }}</span>
+                                                        @endif
                                                     @endforeach
                                                 </td>
+                                                 
                                                 <td>
-                                                    <form action="{{ route('users.destroy', $item->username) }}" method="POST" style="margin-bottom: 5px">
-                                                        @method('delete')
-                                                        @csrf
-                                                        <div class="d-flex align-items-center list-action">
-                                                            {{-- <a class="btn btn-info mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="View"
-                                                                href="{{ route('users.show', $item->username) }}"><i class="ri-eye-line mr-0"></i>
-                                                            </a> --}}
-                                                            <a class="btn btn-success mr-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="{{ route('users.edit', $item->username) }}"><i class="ri-pencil-line mr-0"></i>
-                                                            </a>
-                                                            <button type="submit" class="btn btn-warning mr-2 border-none" onclick="return confirm('Are you sure you want to delete this record?')" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="ri-delete-bin-line mr-0"></i></button>
-                                                        </div>
-                                                    </form>
+                                                    <div class="d-flex align-items-center list-action">
+                                                        <!-- View Button (Triggers Modal) -->
+                                                        <a href="javascript:void(0);" class="btn btn-primary mr-2 viewUser" data-id="{{ $item->id }}" title="View">
+                                                            <i class="ri-eye-line mr-0"></i>
+                                                        </a>
+                                                        <!-- Edit Button -->
+                                                        <a class="btn btn-success mr-2" href="{{ route('users.edit', $item->username) }}">
+                                                            <i class="ri-pencil-line mr-0"></i>
+                                                        </a>
+                                                
+                                                        <!-- Delete Form -->
+                                                        {{-- <form action="{{ route('users.destroy', $item->id) }}" method="POST" style="margin-bottom: 5px;">
+                                                            @method('delete')
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-warning mr-2 border-none" onclick="return confirm('Are you sure you want to delete this record?')">
+                                                                <i class="ri-delete-bin-line mr-0"></i>
+                                                            </button>
+                                                        </form> --}}
+                                                        <!-- Delete Button -->
+<a href="javascript:void(0);" class="btn btn-danger deleteUser" data-id="{{ $item->id }}" title="Delete">
+    <i class="ri-delete-bin-line mr-0"></i>
+</a>
+
+                                                    </div>
                                                 </td>
+                                                
                                             </tr>
                                             @empty
                                             <div class="alert text-white bg-danger" role="alert">
@@ -168,112 +183,296 @@
             </div>
         </div>
 
+
+<!-- Modern User Details Modal -->
+<div class="modal fade" id="viewUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-orange text-white">
+                <h5 class="modal-title"><i class="fas fa-user-circle"></i> User Details</h5>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-3">
+                    <img id="modalUserPhoto" src="/user.png" alt="User Photo"
+                        class="img-fluid rounded-circle shadow-sm border border-3 border-light" width="100">
+                </div>
+                <table class="table table-hover align-middle">
+                    <tbody>
+                        <tr><td><strong><i class="fas fa-id-badge"></i> ID:</strong></td><td id="modalUserId"></td></tr>
+                        <tr><td><strong><i class="fas fa-user"></i> Name:</strong></td><td id="modalUserName"></td></tr>
+                        <tr><td><strong><i class="fas fa-user-tag"></i> Username:</strong></td><td id="modalUserUsername"></td></tr>
+                        <tr><td><strong><i class="fas fa-envelope"></i> Email:</strong></td><td id="modalUserEmail"></td></tr>
+                        <tr><td><strong><i class="fas fa-user-shield"></i> Role:</strong></td><td id="modalUserRole"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteUserModalLabel">Confirm User Deletion</h5>
+                <button type="button" class="close text-white cancelDelete" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="deleteUserPhoto" src="" alt="User Photo" class="rounded-circle mb-3" width="100" height="100">
+                <h5 id="deleteUserName"></h5>
+                <p><strong>Username:</strong> <span id="deleteUserUsername"></span></p>
+                <p><strong>Email:</strong> <span id="deleteUserEmail"></span></p>
+                <p class="text-danger">Are you sure you want to delete this user?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancelDelete" data-dismiss="modal">Cancel</button>
+                <button id="confirmDeleteUser" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- AJAX Script -->
+<!-- Ensure jQuery is loaded -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).on('click', '.viewUser', function () {
+        let userId = $(this).data('id');
+        console.log("Fetching user with ID:", userId);
+
+        $.ajax({
+            url: `/users/${userId}`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.log("User data received:", data);
+
+                // Check if data contains an error
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Update modal content
+                $('#modalUserId').text(data.id);
+                $('#modalUserName').text(data.name);
+                $('#modalUserUsername').text(data.username || 'N/A'); // Handle null values
+                $('#modalUserEmail').text(data.email || 'N/A');
+                $('#modalUserRole').text(data.role || 'No Role Assigned');
+
+                // Handle missing photos
+                let photoUrl = data.photo ? data.photo : '/default-user.png';
+                $('#modalUserPhoto').attr('src', photoUrl);
+
+                $('#viewUserModal').modal('show');
+            },
+            error: function (xhr) {
+                console.error("Error:", xhr.responseText);
+                alert("User details could not be loaded.");
+            }
+        });
+    });
+   
+
+    $(document).on('click', '.deleteUser', function () {
+        let userId = $(this).data('id');
+
+        $.ajax({
+            url: `/users/${userId}`,
+            type: 'GET',
+            success: function (data) {
+                $('#deleteUserPhoto').attr('src', data.photo ? data.photo : '/default-user.png');
+                $('#deleteUserName').text(data.name);
+                $('#deleteUserUsername').text(data.username);
+                $('#deleteUserEmail').text(data.email);
+                $('#confirmDeleteUser').data('id', userId);
+                $('#deleteUserModal').modal('show');
+            },
+            error: function () {
+                alert('Error fetching user details.');
+            }
+        });
+    });
+
+    // Confirm delete
+    $('#confirmDeleteUser').on('click', function () {
+        let userId = $(this).data('id');
+
+        $.ajax({
+            url: `/users/${userId}`,
+            type: 'POST',
+            data: { _method: 'DELETE', _token: '{{ csrf_token() }}' },
+            success: function () {
+                $('#deleteUserModal').modal('hide');
+
+                // Show success message
+                $('#deleteSuccessMessage').fadeIn().delay(3000).fadeOut();
+                
+                // Reload after short delay
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            },
+            error: function () {
+                alert('Error deleting user.');
+            }
+        });
+    });
+
+    // Cancel delete button fix
+    $('.cancelDelete').on('click', function () {
+        $('#deleteUserModal').modal('hide');
+    });
+
+
+</script>
+
+
+
+
+
     
 
 <style>
-    .modern-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 12px 20px;
-        font-size: 18px;
-        font-weight: 600;
-        border-radius: 22px;
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transform: scale(1);
+        .custom-badge {
+        font-size: 0.9rem;         /* Adjust the font size */
+        font-weight: 600;                   /* Bold text for emphasis */
+        letter-spacing: 0.5px;              /* Slight spacing between letters */
+        padding: 0.4em 0.6em;               /* Padding for space */       /* Adjust the padding */
+        border-radius: 12px;         /* Rounded corners */
+        transition: all 0.3s ease;   /* Smooth hover transition */
+        color: #ffffff !important;                 /* White text */
+        display: inline-block;
     }
 
-    .modern-btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    /*  */
+
+    /* Specific colors for roles */
+    .super-admin {
+        background-color: rgb(230, 82, 9);
     }
 
+    .user-role {
+        background-color: navy;
     
-    /* Unique styles for each button */
-    .btn-panel {
-        /* background: linear-gradient(135deg, #4CAF50, #2E7D32); */
-        background: #4d4641;
-        color: white;
     }
 
-    .btn-panel:hover {
-        /* background: linear-gradient(135deg, #2E7D32, #1B5E20); */
-        background: #01497c;
-        color: white;
-    }
+        .modern-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 22px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: scale(1);
+        }
 
-    .btn-panel-tab.active {
-        background-color: #003459;
-        color: aliceblue;
-    }
+        .modern-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
 
-     /* Dropdown menu customization */
-     .dropdown-menu {
-        border-radius: 8px;
-        overflow: hidden;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+        
+        /* Unique styles for each button */
+        .btn-panel {
+            /* background: linear-gradient(135deg, #4CAF50, #2E7D32); */
+            background: #4d4641;
+            color: white;
+        }
 
-    .dropdown-item:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-    }
+        .btn-panel:hover {
+            /* background: linear-gradient(135deg, #2E7D32, #1B5E20); */
+            background: #01497c;
+            color: white;
+        }
 
-    /*SEARCH AND CLEAR */
-    .btn-custom-search {
-        background-color: #007bff !important;
-        color: #fff !important;
-        border: none;
-        border-radius: 0% !important;
-        padding: 7px 8px !important;
-        transition: background-color 0.3s ease !important;
-    }
+        .btn-panel-tab.active {
+            background-color: #003459;
+            color: aliceblue;
+        }
 
-    .btn-custom-search:hover {
-        background-color: #0056b3 !important;
-    }
+        /* Dropdown menu customization */
+        .dropdown-menu {
+            border-radius: 8px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-    .btn-custom-clear {
-        background-color: #6c757d !important;
-        color: #fff !important;
-        border: none;
-        border-radius: 0% !important;
-        padding: 7px 8px !important;
-        transition: background-color 0.3s ease !important;
-    }
+        .dropdown-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
 
-    .btn-custom-clear:hover {
-        background-color: #495057 !important;
-    }
+        /*SEARCH AND CLEAR */
+        .btn-custom-search {
+            background-color: #007bff !important;
+            color: #fff !important;
+            border: none;
+            border-radius: 0% !important;
+            padding: 7px 8px !important;
+            transition: background-color 0.3s ease !important;
+        }
 
-    .search-input {
-        width: 100% !important;
+        .btn-custom-search:hover {
+            background-color: #0056b3 !important;
+        }
+
+        .btn-custom-clear {
+            background-color: #6c757d !important;
+            color: #fff !important;
+            border: none;
+            border-radius: 0% !important;
+            padding: 7px 8px !important;
+            transition: background-color 0.3s ease !important;
+        }
+
+        .btn-custom-clear:hover {
+            background-color: #495057 !important;
+        }
+
+        .search-input {
+            width: 100% !important;
+            height: 40px !important;
+            font-size: 14px !important;
+            padding: 8px 15px !important;
+            border-radius: 0px !important;
+        }
+
+
+    /* Styles for Filter Form */
+    .page-rows {
+        width: 40% !important;
         height: 40px !important;
-        font-size: 14px !important;
+        font-size: 13px !important;
         padding: 8px 15px !important;
         border-radius: 0px !important;
+        border: 1px solid #ced4da !important;
+        background-color: #f8f9fa !important;
+        color: #495057 !important;
+        transition: border-color 0.3s ease !important;
     }
 
-
-/* Styles for Filter Form */
-.page-rows {
-    width: 40% !important;
-    height: 40px !important;
-    font-size: 13px !important;
-    padding: 8px 15px !important;
-    border-radius: 0px !important;
-    border: 1px solid #ced4da !important;
-    background-color: #f8f9fa !important;
-    color: #495057 !important;
-    transition: border-color 0.3s ease !important;
-}
-
-.rows-per-page:focus {
-    border-color: #007bff !important;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.25) !important;
-}
+    .rows-per-page:focus {
+        border-color: #007bff !important;
+        box-shadow: 0 0 4px rgba(0, 123, 255, 0.25) !important;
+    }
 
 
 </style>

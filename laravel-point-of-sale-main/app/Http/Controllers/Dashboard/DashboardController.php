@@ -4,21 +4,27 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
 
 
 class DashboardController extends Controller
 {
 
 
-
-
-
 public function index(Request $request) 
 {
+    $user = Auth::user();
+
+    // Fetch unread notifications for the logged-in user
+    $notifications = Notification::where('user_id', $user->id)
+                                 ->where('is_read', false)
+                                 ->latest()
+                                 ->get();
+
     // Fetch totals and other relevant data
     $totalPaid = Order::sum('pay');
     $totalDue = Order::sum('due');
@@ -117,27 +123,6 @@ public function index(Request $request)
             ->get();
 
 
-            $lowStockThreshold = 10; // Customize the threshold as needed
-
-            // Fetch low-stock products
-            $lowStockProducts = Product::where('product_store', '<=', $lowStockThreshold)->get();
-        
-            // Create notifications for low-stock products (if not already created for this session)
-            foreach ($lowStockProducts as $product) {
-                if (!Notification::where('product_id', $product->id)->where('is_read', false)->exists()) {
-                    Notification::create([
-                        'product_id' => $product->id,
-                        'user_id' => auth()->id(), // Current user
-                        'message' => "Low stock alert: {$product->product_name} ({$product->product_store} left)",
-                        'is_read' => false
-                    ]);
-                }
-            }
-        
-            // Fetch unread notifications
-            $notifications = Notification::where('user_id', auth()->id())->where('is_read', false)->get();
-        
-
 
 
 
@@ -160,7 +145,7 @@ public function index(Request $request)
             'stockValues' => $stockValues,
             'lowStockProducts' => $lowStockProducts, // Add this line
             'mostSoldProducts' => $mostSoldProducts,
-            'notifications' => $notifications,
+            'notifications' => $notifications, // Pass notifications to the view
         ]);
         
     }

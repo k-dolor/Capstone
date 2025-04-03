@@ -1,7 +1,15 @@
 @extends('dashboard.body.main')
 
 @section('container')
+@if(Auth::check())
+    <script>console.log("✅ User is logged in! User ID: {{ Auth::id() }}");</script>
+@else
+    <script>console.log("❌ User is NOT authenticated!");</script>
+@endif
+
 @include('dashboard.body.navbar')
+
+
 <div class="container-fluid p-4" style="border-radius: 5px;">
     @if (session()->has('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -156,25 +164,7 @@
         });
     });
 
-    $('.notification-item').click(function() {
-            let notificationId = $(this).data('id');
 
-            $.ajax({
-                url: "/notifications/read/" + notificationId,
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                },
-                success: function(response) {
-                    console.log(response);
-                    alert('Notification marked as read!');
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    alert('Error marking notification as read.');
-                }
-            });
-        });
 
 </script>
 @endsection

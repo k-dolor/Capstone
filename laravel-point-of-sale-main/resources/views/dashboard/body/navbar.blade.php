@@ -36,7 +36,7 @@
 
                         
 {{-- //*********************nOTIFICATION BELL******************************************* --}}
-                        <li class="nav-item dropdown">
+                        {{-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-bell fa-lg"></i>  
                                 @if($notifications->count() > 0)
@@ -63,7 +63,28 @@
                                     <li><a class="dropdown-item text-center text-muted">No new notifications</a></li>
                                 @endif
                             </ul>
+                        </li> --}}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa-solid fa-bell fa-lg"></i>  
+                                <span class="badge badge-danger" id="notificationCount">{{ count($notifications) }}</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                @if(count($notifications) > 0)
+                                    @foreach($notifications as $notification)
+                                        <a class="dropdown-item" href="/inventory" onclick="markAsRead({{ $notification->id }})">
+                                            {{ $notification->message }}
+                                        </a>
+                                    @endforeach
+                                @else
+                                    <a class="dropdown-item">No new notifications</a>
+                                @endif
+                            </div>
                         </li>
+                        
+                        
+                        
+                                              
                         {{-- //PROFILE --}}
                         <li class="nav-item nav-icon dropdown caption-content">
                             <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton4"
@@ -170,51 +191,120 @@
 
 <script>
  
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll('.mark-as-read').forEach(item => {
-        item.addEventListener('click', function(event) {
-            event.preventDefault();
-            let notificationId = this.dataset.id;
+// document.addEventListener("DOMContentLoaded", function() {
+//     document.querySelectorAll('.mark-as-read').forEach(item => {
+//         item.addEventListener('click', function(event) {
+//             event.preventDefault();
+//             let notificationId = this.dataset.id;
 
-            fetch(`/notifications/${notificationId}/mark-read`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({})
-            }).then(response => {
-                if (response.ok) {
-                    this.parentElement.remove();
+//             fetch(`/notifications/${notificationId}/mark-read`, {
+//                 method: 'POST',
+//                 headers: {
+//                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+//                     'Content-Type': 'application/json'
+//                 },
+//                 body: JSON.stringify({})
+//             }).then(response => {
+//                 if (response.ok) {
+//                     this.parentElement.remove();
                     
-                    // Update notification count
-                    let badge = document.querySelector('#notificationDropdown .badge');
-                    let count = parseInt(badge.textContent) - 1;
-                    badge.textContent = count > 0 ? count : '';
+//                     // Update notification count
+//                     let badge = document.querySelector('#notificationDropdown .badge');
+//                     let count = parseInt(badge.textContent) - 1;
+//                     badge.textContent = count > 0 ? count : '';
+//                 }
+//             });
+//         });
+//     });
+// });
+// document.addEventListener("click", function(event) {
+//     if (event.target.classList.contains("mark-as-read")) {
+//         event.preventDefault();
+        
+//         let notificationId = event.target.getAttribute("data-id");
+        
+//         fetch(`/mark-notification/${notificationId}`, {
+//             method: "POST",
+//             headers: {
+//                 "X-CSRF-TOKEN": document.querySelector("meta[name='csrf-token']").content,
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify({ id: notificationId })
+//         }).then(response => {
+//             if (response.ok) {
+//                 event.target.closest(".dropdown-item").remove();
+//                 fetchNotifications(); // Refresh notifications count
+//             }
+//         }).catch(error => console.error("Error marking as read:", error));
+//     }
+// });
+
+
+// $('.notification-item').click(function() {
+//         let notificationId = $(this).data('id');
+
+//         $.ajax({
+//             url: "/notifications/read/" + notificationId,
+//             type: "POST",
+//             data: {
+//                 _token: "{{ csrf_token() }}",
+//             },
+//             success: function(response) {
+//                 console.log(response);
+//                 alert('Notification marked as read!');
+//             },
+//             error: function(xhr) {
+//                 console.log(xhr.responseText);
+//                 alert('Error marking notification as read.');
+//             }
+//         });
+//     });
+
+    
+
+// 
+
+function loadNotifications() {
+        fetch('/notifications')
+            .then(response => response.json())
+            .then(data => {
+                let notificationList = document.getElementById('notificationList');
+                let notificationCount = document.getElementById('notificationCount');
+                
+                notificationList.innerHTML = '';
+                
+                if (data.length > 0) {
+                    notificationCount.innerText = data.length;
+                    
+                    data.forEach(notification => {
+                        let listItem = document.createElement('li');
+                        listItem.innerHTML = `<a href="/inventory" class="dropdown-item" onclick="markAsRead(${notification.id})">${notification.message}</a>`;
+                        notificationList.appendChild(listItem);
+                    });
+                } else {
+                    notificationCount.innerText = '0';
+                    notificationList.innerHTML = '<li><a class="dropdown-item">No new notifications</a></li>';
                 }
             });
+    }
+
+    function markAsRead(id) {
+        fetch(`/notifications/read/${id}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json'
+            }
+        }).then(() => {
+            loadNotifications();
         });
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadNotifications);
+    document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ Navbar script is running!");
+    loadNotifications(); // This function should be running
 });
 
-$('.notification-item').click(function() {
-        let notificationId = $(this).data('id');
-
-        $.ajax({
-            url: "/notifications/read/" + notificationId,
-            type: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-            },
-            success: function(response) {
-                console.log(response);
-                alert('Notification marked as read!');
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-                alert('Error marking notification as read.');
-            }
-        });
-    });
-
+                       
 </script>

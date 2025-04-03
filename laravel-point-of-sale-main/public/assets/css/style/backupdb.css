@@ -1,0 +1,207 @@
+    /* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Header */
+h1,h2.text-center {
+    color: #02011a;
+}
+
+/* Buttons */
+.modern-btn {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.btn-panel {
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.btn-panel:hover {
+    background-color: #f0f0f0;
+}
+
+.btn-panel-tab.active {
+    background-color: #455fbe;
+    color: white;
+}
+
+/* Dropdown */
+.dropdown-menu {
+    width: 100%;
+    margin-top: 5px;
+}
+
+/* Alert */
+.alert {
+    color: white;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+/* Table */
+.table thead {
+    background-color: #dfe3e8;
+}
+
+.ligth-body td {
+    padding: 10px;
+}
+
+/* Buttons */
+.btn-custom-search {
+    background-color: #455fbe;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+}
+
+.btn-custom-search:hover {
+    background-color: #354cae;
+}
+
+.btn-custom-clear {
+    background-color: #cd3746;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+}
+
+.btn-custom-clear:hover {
+    background-color: #b32d3a;
+}
+
+/* Download & Delete Buttons */
+.btn-success {
+    background-color: #3e9b32 !important;
+    color: white;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #cd3746 !important;
+    color: white;
+    border: none;
+}
+
+/* Form Inputs */
+.search-input {
+    width: 100%;
+    padding: 8px;
+}
+
+.form-control {
+    border-radius: 5px;
+}
+
+
+
+
+.btn-custom-search {
+background-color: #007bff !important;
+color: #fff !important;
+border: none;
+border-radius: 0% !important;
+padding: 7px 8px !important;
+transition: background-color 0.3s ease !important;
+}
+
+.btn-custom-search:hover {
+    background-color: #0056b3 !important;
+}
+
+.btn-custom-clear {
+    background-color: #6c757d !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 0% !important;
+    padding: 7px 8px !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.btn-custom-clear:hover {
+    background-color: #495057 !important;
+}
+
+.search-input {
+    width: 100% !important;
+    height: 40px !important;
+    font-size: 14px !important;
+    padding: 8px 15px !important;
+    border-radius: 0px !important;
+}
+
+.search-input, 
+#backup_date {
+    height: 40px !important;
+    font-size: 14px !important;
+    padding: 8px 15px !important;
+}
+
+/* Order Date Filter Styling */
+#backup_date {
+    border: 1px solid #ced4da !important;
+    border-radius: 0px !important;
+    background-color: #f8f9fa !important;
+    color: #495057 !important;
+    transition: border-color 0.3s ease !important;
+}
+
+/*PANEL*/
+.modern-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 20px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 22px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transform: scale(1);
+    }
+
+    .modern-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+
+/* Unique styles for each button */
+.btn-panel {
+    /* background: linear-gradient(135deg, #4CAF50, #2E7D32); */
+    background: #4d4641;
+    color: white;
+}
+
+.btn-panel:hover {
+    /* background: linear-gradient(135deg, #2E7D32, #1B5E20); */
+    background: #01497c;
+    color: white;
+}
+
+.btn-panel-tab.active {
+    background-color: #003459;
+    color: aliceblue;
+}
+
+
+    /* Dropdown menu customization */
+    .dropdown-menu {
+    border-radius: 8px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}

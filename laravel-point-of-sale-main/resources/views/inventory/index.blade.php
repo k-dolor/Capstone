@@ -9,6 +9,7 @@
     </div>
 @endif
 
+
     <div class="container-fluid">
         <form action="{{ route('inventory.index') }}" method="get" class="mb-3">
             <div class="row">
@@ -95,7 +96,7 @@
                             
                             <td>{{ $product->category->name }}</td>
                             <td>{{ $product->product_store }}</td>
-                            <td>
+                            {{-- <td>
                                 @if ((int)$product->product_store <= 0)
                                     <span style="color: #ff0000; font-weight: bold; background-color: #f8d7da; padding: 5px 5px; border-radius: 5px;">No Stock</span>
                                 @elseif ((int)$product->product_store > 0 && (int)$product->product_store < 10)
@@ -103,9 +104,42 @@
                                 @else
                                     <span style="color: #002d13; font-weight: bold; background-color: #25d952a2; padding: 5px 5px; border-radius: 5px;">In Stock</span>
                                 @endif
+                            </td> --}}
+                            <td>
+                                @php
+                                    $stock = (int)$product->product_store;
+                                    $badgeColor = '';
+                                    $textColor = '#fff'; // Default white text
+                                    $statusText = '';
+                            
+                                    if ($stock <= 0) {
+                                        $badgeColor = '#ff0000'; // Red for Out of Stock
+                                        $statusText = 'Out of Stock';
+                                    } elseif ($stock > 0 && $stock < 10) {
+                                        $badgeColor = '#d33707'; // Red-Orange for Very Low Stock
+                                        $statusText = 'Low Stock';
+                                    } elseif ($stock >= 10 && $stock <= 49) {
+                                        $badgeColor = '#ff8000'; // Orange for Low Stock
+                                        $statusText = 'Low Stock';
+                                    } elseif ($stock >= 50 && $stock <= 70) {
+                                        $badgeColor = '#ffcc00'; // Yellow for Medium Stock
+                                        $textColor = '#333'; // Dark text
+                                        $statusText = 'Average';
+                                    } else {
+                                        $badgeColor = '#109130'; // Green for In Stock
+                                        $statusText = 'In Stock';
+                                    }
+                                @endphp
+                            
+                                <span style="color: {{ $textColor }}; font-weight: bold; background-color: {{ $badgeColor }}; padding: 5px 8px; border-radius: 5px;">
+                                    {{ $statusText }}
+                                </span>
                             </td>
+                            
+                            
+                            
                             <td style="background-color: #f4f6f9;">₱{{ number_format($product->buying_price, 2) }}</td>
-                            <td style="background-color: #f4f6f9;">₱{{ number_format($product->selling_price * $product->product_store, 2) }}</td>
+                            <td style="background-color: #f4f9f4;">₱{{ number_format($product->selling_price * $product->product_store, 2) }}</td>
                             <td>
                                  <!-- Stock In Button -->
                             <button type="button" class="btn btn-primary btn-sm stock-in-btn" style="border-radius: 4px; font-size:14px; padding: 7px 10px; background-color: #13982d; color: white; border: none;"
@@ -122,7 +156,7 @@
                                     <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
                                     <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
                                     <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
-                                </svg> <span style="color: rgb(97, 83, 0);">History</span> 
+                                </svg> <span style="color: rgb(97, 83, 0);"></span> 
                                 </a>
                             </td>
                         </tr>
@@ -189,96 +223,96 @@
     text-align: center; /* Center align text */
     vertical-align: middle; /* Keep content aligned properly */
     white-space: nowrap; /* Prevent wrapping */
-}
+    }
 
-.table img.product-image {
-    width: 45px; 
-    height: 45px;
-    object-fit: cover;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
+    .table img.product-image {
+        width: 45px; 
+        height: 45px;
+        object-fit: cover;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
 
     /* Style for the modal header */
-.modal-header.bg-primary {
-    background-color: #f25939 !important; /* Change the background color here */
-    color: white !important; /* Change the text color */
-}
+    .modal-header.bg-primary {
+        background-color: #f25939 !important; /* Change the background color here */
+        color: white !important; /* Change the text color */
+    }
 
-/* Optional: Hover effect for the close button */
-.modal-header .close:hover {
-    color: #fff; /* Color when the close button is hovered */
-}
+    /* Optional: Hover effect for the close button */
+    .modal-header .close:hover {
+        color: #fff; /* Color when the close button is hovered */
+    }
 
-/* Optional: Change background color for modal header on hover */
-.modal-header.bg-primary:hover {
-    background-color: #2980b9 !important; /* Darker shade for hover effect */
-}
+    /* Optional: Change background color for modal header on hover */
+    .modal-header.bg-primary:hover {
+        background-color: #2980b9 !important; /* Darker shade for hover effect */
+    }
 
-/* Button Styles */
-.btn-custom-search {
-    background-color: #007bff !important;
-    color: #fff !important;
-    border: none;
-    border-radius: 0% !important;
-    padding: 7px 8px !important;
-    transition: background-color 0.3s ease !important;
-}
+    /* Button Styles */
+    .btn-custom-search {
+        background-color: #007bff !important;
+        color: #fff !important;
+        border: none;
+        border-radius: 0% !important;
+        padding: 7px 8px !important;
+        transition: background-color 0.3s ease !important;
+    }
 
-.btn-custom-search:hover {
-    background-color: #0056b3 !important;
-}
+    .btn-custom-search:hover {
+        background-color: #0056b3 !important;
+    }
 
-.btn-custom-clear {
-    background-color: #6c757d !important;
-    color: #fff !important;
-    border: none;
-    border-radius: 0% !important;
-    padding: 7px 8px !important;
-    transition: background-color 0.3s ease !important;
-}
+    .btn-custom-clear {
+        background-color: #6c757d !important;
+        color: #fff !important;
+        border: none;
+        border-radius: 0% !important;
+        padding: 7px 8px !important;
+        transition: background-color 0.3s ease !important;
+    }
 
-.btn-custom-clear:hover {
-    background-color: #495057 !important;
-}
+    .btn-custom-clear:hover {
+        background-color: #495057 !important;
+    }
 
-.btn-custom-actions {
-    background-color: #0173ba !important;
-    color: #fff !important;
-    border: none;
-    border-radius: 0% !important;
-    padding: 5px 10px !important;
-    transition: background-color 0.3s ease !important;
-}
+    .btn-custom-actions {
+        background-color: #0173ba !important;
+        color: #fff !important;
+        border: none;
+        border-radius: 0% !important;
+        padding: 5px 10px !important;
+        transition: background-color 0.3s ease !important;
+    }
 
-.btn-custom-actions:hover {
-    background-color:  #003df4 !important;
-}
+    .btn-custom-actions:hover {
+        background-color:  #003df4 !important;
+    }
 
-.search-input {
-    width: 105% !important; /* Longer search input */
-    height: 40px !important;
-    font-size: 14px !important;
-    padding: 8px 15px !important;
-    border-radius: 0px !important;
-}
-.search-input, 
-#category,
-#stock_status {
-    height: 40px !important;
-    font-size: 14px !important;
-    padding: 8px 15px !important;
-}
+    .search-input {
+        width: 105% !important; /* Longer search input */
+        height: 40px !important;
+        font-size: 14px !important;
+        padding: 8px 15px !important;
+        border-radius: 0px !important;
+    }
+    .search-input, 
+    #category,
+    #stock_status {
+        height: 40px !important;
+        font-size: 14px !important;
+        padding: 8px 15px !important;
+    }
 
-/* Order Date Filter Styling */
-#category,
-#stock_status {
-    border: 1px solid #ced4da !important;
-    border-radius: 0px !important;
-    background-color: #f8f9fa !important;
-    color: #495057 !important;
-    transition: border-color 0.3s ease !important;
-}
+    /* Order Date Filter Styling */
+    #category,
+    #stock_status {
+        border: 1px solid #ced4da !important;
+        border-radius: 0px !important;
+        background-color: #f8f9fa !important;
+        color: #495057 !important;
+        transition: border-color 0.3s ease !important;
+    }
 
 
 </style>

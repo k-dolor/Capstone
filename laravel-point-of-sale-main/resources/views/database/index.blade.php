@@ -1,115 +1,16 @@
 @extends('dashboard.body.main')
+<link rel="stylesheet" href="{{ asset('assets/css/style/backupdb.css') }}">
 
 @section('container')
-<style>
-
-    .btn-custom-search {
-    background-color: #007bff !important;
-    color: #fff !important;
-    border: none;
-    border-radius: 0% !important;
-    padding: 7px 8px !important;
-    transition: background-color 0.3s ease !important;
-    }
-
-    .btn-custom-search:hover {
-        background-color: #0056b3 !important;
-    }
-
-    .btn-custom-clear {
-        background-color: #6c757d !important;
-        color: #fff !important;
-        border: none;
-        border-radius: 0% !important;
-        padding: 7px 8px !important;
-        transition: background-color 0.3s ease !important;
-    }
-
-    .btn-custom-clear:hover {
-        background-color: #495057 !important;
-    }
-
-    .search-input {
-        width: 100% !important;
-        height: 40px !important;
-        font-size: 14px !important;
-        padding: 8px 15px !important;
-        border-radius: 0px !important;
-    }
-
-    .search-input, 
-    #backup_date {
-        height: 40px !important;
-        font-size: 14px !important;
-        padding: 8px 15px !important;
-    }
-
-    /* Order Date Filter Styling */
-    #backup_date {
-        border: 1px solid #ced4da !important;
-        border-radius: 0px !important;
-        background-color: #f8f9fa !important;
-        color: #495057 !important;
-        transition: border-color 0.3s ease !important;
-    }
-
-    /*PANEL*/
-    .modern-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 20px;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 22px;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transform: scale(1);
-        }
-
-        .modern-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-    
-    /* Unique styles for each button */
-    .btn-panel {
-        /* background: linear-gradient(135deg, #4CAF50, #2E7D32); */
-        background: #4d4641;
-        color: white;
-    }
-
-    .btn-panel:hover {
-        /* background: linear-gradient(135deg, #2E7D32, #1B5E20); */
-        background: #01497c;
-        color: white;
-    }
-
-    .btn-panel-tab.active {
-        background-color: #003459;
-        color: aliceblue;
-    }
 
 
-     /* Dropdown menu customization */
-     .dropdown-menu {
-        border-radius: 8px;
-        overflow: hidden;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
 
-    .dropdown-item:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-    }
-</style>
+
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-                <h1 class="text-center mb-4 no-print" style="font-family: 'Poppins', sans-serif;color:#02011a;">Administration Panel</h1>
+            <h1 class="text-center mb-4 no-print">Administration Panel</h1>
                 <div class="card-body">
                        {{--  BUTTONS   --}}
                     <div class="row text-center">
@@ -141,12 +42,7 @@
                             </div>
                         </div>
                     </div>
-                    
-
-
-
-
-                    
+                                       
                         <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-12">
@@ -160,7 +56,8 @@
                                 @endif
                                 <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
                                     <div>
-                                        <h2 class="mb-3" style="color: #02011a">Database Backup List</h2>
+                                        <h2 class="text-center mb-3">Database Backup List</h2>
+
                                     </div>
                                     <div>
                                         <a href="{{ route('backup.create') }}" class="btn btn-primary add-list" style="border-radius: 2; background-color: #455fbe; color: white; border: none;">Backup Now</a>
@@ -192,16 +89,13 @@
                             </form>
                         </div>
 
-                            
-                                
-
                             <div class="col-lg-12">
                                 <div class="card">
                                 </div>
                                 <div class="card-body"  style="background: white;">
                                 <div class="table-responsive rounded mb-3">
                                     <table class="table table-bordered table-striped">
-                                        <thead style="background-color: #dfe3e8;">
+                                        <thead>
                                             <tr>
                                                 <th>No.</th>
                                                 <th>File Name</th>

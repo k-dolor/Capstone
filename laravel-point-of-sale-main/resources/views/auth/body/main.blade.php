@@ -11,18 +11,12 @@
         <link rel="stylesheet" href="{{ asset('assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/vendor/remixicon/fonts/remixicon.css') }}">
-        {{-- <style>
-            body {
-                background: linear-gradient(135deg, #ffcd50, #fb7240);
-                /* background-image: url('assets/images/logo2.jpg');
-                background-size: cover; /* Ensures the image covers the entire background */
-                /* background-position: center; Centers the image */
-            }
-        </style> --}}
+
         
         
     </head>
 <body>
+    
     <!-- loader Start -->
     {{-- <div id="loading">
         <div id="loading-center"></div>
