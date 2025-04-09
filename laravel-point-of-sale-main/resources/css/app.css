@@ -1,3 +1,171 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Import Poppins Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+/* General Font & Container */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.modern-container {
+    padding: 2rem;
+    border-radius: 1rem;
+    background-color: #f9fafc;
+    min-height: 80vh;
+}
+
+/* Page Titles */
+.modern-title {
+    font-weight: 600;
+    font-size: 2.5rem;
+    color: #1e1e2f;
+}
+
+.section-heading {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+/* Modern Tabs */
+.report-tab {
+    margin: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #1e1e2f;
+    font-weight: 500;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.report-tab:hover,
+.report-tab.active {
+    background-color: #1e1e2f;
+    color: white;
+    font-weight: 600;
+    transform: translateY(-2px);
+}
+
+/* Button Styles */
+.modern-btn-primary {
+    background: #0b0bf8 !important;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: 0.3s ease;
+}
+
+.modern-btn-primary:hover {
+    background: #000;
+}
+
+.modern-btn-secondary {
+    background: #616161;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+}
+
+.modern-btn-warning {
+    background-color: #ff8400;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+}
+
+.modern-btn-dark {
+    background-color: #16161f;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+}
+
+/* Input & Select */
+.modern-select,
+.modern-input {
+    height: 38px;
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* Filter Blocks */
+.filter-block {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Optional Label-Input Grouping */
+.filter-group {
+    display: none; /* You can toggle this with JS */
+    align-items: center;
+    gap: 15px;
+}
+
+.filter-group label {
+    font-size: 15px;
+    width: 120px;
+    text-align: left;
+}
+
+.filter-group input {
+    width: 150px;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+/* Table & Cards */
+.modern-card {
+    border: 1px solid #e1e5ec;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.modern-table thead {
+    background-color: #f1f3f7;
+    font-weight: 600;
+}
+
+/* Stock Status Badge */
+.badge-status {
+    background-color: #059511ef !important;
+    color: white !important;
+    font-weight: bold !important;
+    padding: 8px 10px;
+    border-radius: 3px !important;
+    font-size: 15px !important;
+    text-transform: capitalize !important;
+}
+
+/* Hide for Printing */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* Responsive Tab Wrap */
+@media (max-width: 768px) {
+    .report-tab {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+}

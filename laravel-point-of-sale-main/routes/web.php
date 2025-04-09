@@ -94,6 +94,9 @@ Route::get('/', function () {
 
     // Route for Stock Report
     Route::get('/reports/stock', [ReportController::class, 'stockReport'])->name('reports.stock');
+    Route::get('/reports/export-stock', [ReportController::class, 'exportStock'])->name('reports.export.stock');
+
+
 
     // Route for Income
     Route::get('/income-report', [ReportController::class, 'incomeReport'])->name('reports.income');

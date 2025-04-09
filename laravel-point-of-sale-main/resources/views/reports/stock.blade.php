@@ -2,11 +2,114 @@
 
 @section('container')
 
+<style>
+    /* Import a clean, modern font */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #1e1e2f;
+    }
+
+    /* Tab Button Base */
+    .report-tab {
+        margin: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: #1e1e2f;
+        font-weight: 500;
+        font-size: 1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    /* Hover & Active State */
+    .report-tab:hover,
+    .report-tab.active {
+        background-color: #1e1e2f;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    /* Responsive Flex Wrap Handling */
+    @media (max-width: 768px) {
+        .report-tab {
+            flex: 1 1 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Buttons */
+    .modern-btn-primary {
+        background: #0b0bf8 !important;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        transition: 0.3s ease;
+    }
+
+    .modern-btn-primary:hover {
+        background: #000;
+    }
+
+    .modern-btn-secondary {
+        background: #616161;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+    }
+
+    .modern-btn-warning {
+        background-color: #ff8400;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        border: none;
+    }
+
+    .modern-btn-dark {
+        background-color: #16161f;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        border: none;
+    }
+
+    /* Select & Input */
+    .modern-select,
+    .modern-input {
+        height: 38px;
+        padding: 5px 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+    }
+
+</style>
+
+
 <div class="container-fluid">
     <!-- Title -->
     <h1 class="text-center mb-4 no-print" style="font-family: 'Poppins', sans-serif;">Reports & Analytics</h1>
 
-     <!-- Tab Navigation -->
+    <!-- Tab Navigation -->
     <div class="d-flex justify-content-center mb-4 flex-wrap">
         <a href="{{ route('reports.index') }}" class="btn report-tab no-print">
             <i class="fas fa-home"></i> Main Page
@@ -15,18 +118,15 @@
             <i class="fas fa-chart-line"></i> Sales Report
         </a>
         <a href="{{ route('reports.stock') }}" class="btn report-tab active no-print">
-            <i class="fas fa-box"></i> Stock Report <!-- Changed to fa-box -->
+            <i class="fas fa-box"></i> Stock Report
         </a>
         <a href="{{ route('reports.income') }}" class="btn report-tab no-print">
             <i class="fas fa-dollar-sign"></i> Income Report
         </a>
         <a href="{{ route('reports.products') }}" class="btn report-tab no-print">
-            <i class="fas fa-box-open"></i> Products Report <!-- Changed to fa-box-open -->
+            <i class="fas fa-box-open"></i> Products Report
         </a>
     </div>
-    
-    
-    
 
     <div class="row">
         <div class="col-lg-12">
@@ -37,198 +137,104 @@
                 <div>
                     <!-- Stock Filter -->
                     <form action="{{ route('reports.stock') }}" method="GET" class="form-inline no-print">
-                        <select name="stock_filter" class="form-control no-print" style="height: 38px;border-radius: 1px;">
+                        <select name="stock_filter" class="form-select modern-select">
                             <option value="">All Stock</option>
-                            <option value="in_stock" @if(request('stock_status') == 'in_stock') selected @endif>In Stock</option>
-                            <option value="low_stock" @if(request('stock_status') == 'low_stock') selected @endif>Low Stock</option>
-                            <option value="out_of_stock" @if(request('stock_status') == 'out_of_stock') selected @endif>Out of Stock</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary" style="margin-left: 5px; height: 38px; border-radius: 2px;">Filter</button>
+                            <option value="in_stock" @if(request('stock_filter') == 'in_stock') selected @endif>IN STOCK</option>
+                            <option value="average" @if(request('stock_filter') == 'average') selected @endif>AVERAGE</option>
+                            <option value="low_stock" @if(request('stock_filter') == 'low_stock') selected @endif>LOW STOCK</option>
+                            <option value="out_of_stock" @if(request('stock_filter') == 'out_of_stock') selected @endif>OUT OF STOCK</option>
+                        </select>                        
+
+                        <button type="submit" class="btn modern-btn-primary" style="margin-left: 5px;">Filter</button>
                     </form>
                 </div>
 
-            <!-- Print and Export Buttons -->
-            <div style="display: flex; gap: 0;">
-                <button class="btn no-print" style="background-color: #3a33ff; color: white;height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center; border-radius: 1px;" onclick="window.print()">Print</button>
-                <a href="{{ route('sales.exportData', ['filter' => request('filter')]) }}" class="btn btn-primary no-print" style="background-color: #ff8400; height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center;border-radius: 1px;">Export</a>
+                <!-- Print and Export Buttons -->
+                <div class="d-flex gap-2 no-print">
+                    <button class="modern-btn-dark" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <a href="{{ route('reports.export.stock', request()->query()) }}" class="modern-btn-warning">
+                        <i class="fas fa-file-export"></i> Export
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <!-- Stock Report Table -->
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Product Name</th>
-                            <th>In Stock</th>
-                            <th>Stock Level</th>
-                            <th>Last Restock Date</th> <!-- New Column -->
-                            <th>Quantity Restocked</th> <!-- New Column -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($products as $index => $product)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $product->product_name }}</td>
-                            <td>{{ $product->product_store }}</td>
-                            <td>
-                                @php
-                                    $stock = (int) $product->product_store;
-                                    $badgeColor = '';
-                                    $textColor = '#fff';
-                                    $statusText = '';
+            <!-- Stock Report Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped text-center">
+                            <thead style="background-color: #dfe3e8;">
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Product Name</th>
+                                    <th>In Stock</th>
+                                    <th>Stock Level</th>
+                                    <th>Last Restock Date</th>
+                                    <th>Quantity Restocked</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                @forelse ($products as $index => $product)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $product->product_name }}</td>
+                                    <td>{{ $product->product_store }}</td>
+                                    <td>
+                                        @php
+                                            $stock = (int) $product->product_store;
+                                            $badgeColor = '';
+                                            $textColor = '#fff';
+                                            $statusText = '';
                     
-                                    if ($stock <= 0) {
-                                        $badgeColor = '#ff4141'; // Red for Out of Stock
-                                        $statusText = 'No Stock';
-                                    } elseif ($stock > 0 && $stock < 10) {
-                                        $badgeColor = '#d33707'; // Red-Orange for Very Low Stock
-                                        $statusText = 'Low Stock';
-                                    } elseif ($stock >= 10 && $stock <= 49) {
-                                        $badgeColor = '#ff8000'; // Orange for Low Stock
-                                        $statusText = 'Low Stock';
-                                    } elseif ($stock >= 50 && $stock <= 70) {
-                                        $badgeColor = '#ffcc00'; // Yellow for Medium Stock
-                                        $textColor = '#333'; // Dark text for better visibility
-                                        $statusText = 'Average';
-                                    } else {
-                                        $badgeColor = '#109130'; // Green for In Stock
-                                        $statusText = 'In Stock';
-                                    }
-                                @endphp
+                                            if ($stock <= 0) {
+                                                $badgeColor = '#ff4141'; // Red for Out of Stock
+                                                $statusText = 'No Stock';
+                                            } elseif ($stock > 0 && $stock < 10) {
+                                                $badgeColor = '#d33707'; // Red-Orange for Very Low Stock
+                                                $statusText = 'LOW STOCK';
+                                            } elseif ($stock >= 10 && $stock <= 49) {
+                                                $badgeColor = '#ff8000'; // Orange for Low Stock
+                                                $statusText = 'LOW STOCK';
+                                            } elseif ($stock >= 50 && $stock <= 70) {
+                                                $badgeColor = '#ffcc00'; // Yellow for Medium Stock
+                                                $textColor = '#333'; // Dark text for better visibility
+                                                $statusText = 'AVERAGE';
+                                            } else {
+                                                $badgeColor = '#109130'; // Green for In Stock
+                                                $statusText = 'IN STOCK';
+                                            }
+                                        @endphp
                     
-                                <span style="color: {{ $textColor }}; font-weight: bold; font-size: 15px; background-color: {{ $badgeColor }}; padding: 8px 8px; border-radius: 5px;">
-                                    {{ $statusText }}
-                                </span>
-                            </td>
-                            <td>{{ $product->lastRestockDate ? $product->lastRestockDate->format('Y-m-d') : 'N/A' }}</td>
-                            <td>{{ $product->lastRestockQuantity ?? 'N/A' }}</td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6">No products available</td>
-                        </tr>
-                        @endforelse
-                    </tbody>              
-                </table>      
+                                        <span style="color: {{ $textColor }}; font-weight: bold; font-size: 15px; background-color: {{ $badgeColor }}; padding: 8px 8px; border-radius: 5px;">
+                                            {{ $statusText }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $product->lastRestockDate ? $product->lastRestockDate->format('Y-m-d') : 'N/A' }}</td>
+                                    <td>{{ $product->lastRestockQuantity ?? 'N/A' }}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6">No products available</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>      
+                    </div>
+                    <!-- Pagination Links -->
+                    <div class="pagination-wrapper text-center mt-4">
+                        {{ $products->links() }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-    /* Hide elements for print */
-    @media print {
-        .no-print {
-            display: none !important;
-        }
-    }
+@endsection
 
-    /* Container for the buttons */
-    .d-flex {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
 
-    /* Smooth Transition Effects */
-    .report-tab {
-        background-color: #007BFF; /* Soft blue background */
-        color: white;
-        border-radius: 30px;
-        padding: 12px 25px;
-        font-size: 16px;
-        margin: 8px;
-        text-align: center;
-        text-transform: uppercase; /* Make text all caps for uniformity */
-        font-weight: 500; /* Slightly bolder text */
-        transition: all 0.3s ease-in-out, box-shadow 0.2s ease, transform 0.2s ease; /* Added transitions */
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow for depth */
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px; /* Space between icon and text */
-    }
 
-    /* Active tab (highlighted) */
-    .report-tab.active {
-        background-color: #012a57; /* Darker blue */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Darker shadow on active */
-    }
 
-    /* Hover effect with animation */
-    .report-tab:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-        transform: translateY(-3px); /* Slightly raise the button */
-        color: white;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
-    }
 
-    /* Adding icons styles */
-    .report-tab i {
-        font-size: 20px; /* Icon size */
-        transition: transform 0.2s ease; /* Smooth icon transition */
-    }
-
-    .report-tab:hover i {
-        transform: translateX(5px); /* Slight movement of the icon when hovering */
-    }
-
-    /* Flexbox layout for the buttons */
-    .d-flex {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        flex-wrap: wrap;
-        margin-top: 20px;
-    }
-
-    /* Card Layout for Content (optional if you want to apply to other parts of the page) */
-    .card {
-        border-radius: 12px;
-        background-color: #fff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Elevation effect */
-        padding: 20px;
-        margin: 15px;
-    }
-
-    /* General Button Style */
-    .btn {
-        font-family: 'Poppins', sans-serif;
-        border-radius: 30px;
-        padding: 12px 25px;
-        font-size: 16px;
-    }
-
-    /* Button active color */
-    .btn-primary {
-        background-color: #0066cc;
-        border: none;
-    }
-
-    /* Buttons hover effects */
-    .btn:hover {
-        opacity: 0.9;
-        transform: translateY(-2px); /* Slight upward movement */
-    }
-
-    /* For mobile responsiveness */
-    @media (max-width: 768px) {
-        .report-tab {
-            font-size: 14px; /* Smaller font size on mobile */
-            padding: 10px 18px; /* Adjust padding */
-        }
-
-        .report-tab i {
-            font-size: 18px; /* Slightly smaller icons for smaller screens */
-        }
-    }
-
-</style>
-
- @endsection

@@ -13,12 +13,15 @@
         <link rel="stylesheet" href="{{ asset('assets/css/backend.css?v=1.0.0') }}">
 
         <link rel="stylesheet" href="{{ asset('assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/css/bootstrap/bootstrap-icons.css') }}">
 
         <link rel="stylesheet" href="{{ asset('assets/vendor/remixicon/fonts/remixicon.css') }}">
         <link rel="stylesheet" href="{{ asset('assets/css/bootstrap/bootstrap-icons.css') }}">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+     
+
              {{-- <link rel="stylesheet" href="{{ asset('assets/css/style/backupdb.css') }}"> --}}
              @yield('styles')
              <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -30,15 +33,9 @@
             body {
 
                 font-family: 'Poppins', sans-serif;
-                /* font-family: 'Inter', sans-serif; */
-                /* font-family: 'Montserrat', sans-serif; */
-                /* background-color: #c5d1db;  */
-                
                 /* background-color: #0e0f10;  */
                 background-color: #d7d7d7; 
-                /* background-color: #f7f4f0;  */
-                
-                /* background-color: #ebeff3;  */
+
             }
         </style>
 
@@ -48,48 +45,27 @@
 <body>
 
     <!-- Wrapper Start -->
-    <div class="wrapper">
+    {{-- <div class="wrapper">
         @include('dashboard.body.sidebar')
+        
 
         @include('dashboard.body.navbar')
 
         <div class="content-page">
             @yield('container') 
         </div>
+    </div> --}}
+    <div class="wrapper">
+        @include('dashboard.body.navbar')   {{-- navbar first --}}
+        @include('dashboard.body.sidebar')  {{-- then sidebar --}}
+        <div class="content-page">
+            @yield('container')
+        </div>
     </div>
     
     
     
     
-    
-    
-        
-
-
-<!--------------------------------------------------------------------------------->
-{{-- // $lowStockThreshold = 10; // Customize the threshold as needed
-
-// // Fetch low-stock products
-// $lowStockProducts = Product::where('product_store', '<=', $lowStockThreshold)->get();
-
-// // Create notifications for low-stock products (if not already created for this session)
-// foreach ($lowStockProducts as $product) {
-//     if (!Notification::where('product_id', $product->id)->where('is_read', false)->exists()) {
-//         Notification::create([
-//             'product_id' => $product->id,
-//             'user_id' => auth()->id(), // Current user
-//             'message' => "Low stock alert: {$product->product_name} ({$product->product_store} left)",
-//             'is_read' => false
-//         ]);
-//     }
-// }
-
-// // Fetch unread notifications
-// $notifications = Notification::where('user_id', auth()->id())->where('is_read', false)->get(); --}}
-
-
-
-
 
 
         

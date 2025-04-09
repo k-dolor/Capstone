@@ -1,6 +1,156 @@
 @extends('dashboard.body.main')
 
 @section('container')
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #1e1e2f;
+    }
+
+    .report-tab {
+        margin: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: #1e1e2f;
+        font-weight: 500;
+        font-size: 1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .report-tab:hover,
+    .report-tab.active {
+        background-color: #1e1e2f;
+        color: #fff;
+        font-weight: 600;
+    }
+
+      /* Responsive Flex Wrap Handling */
+      @media (max-width: 768px) {
+        .report-tab {
+            flex: 1 1 100%;
+            justify-content: center;
+        }
+    }
+ /* Buttons */
+    .modern-btn-primary {
+        background: #0b0bf8 !important;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        transition: 0.3s ease;
+    }
+
+    .modern-btn-primary:hover {
+        background-color: #000288 !important;
+        color: rgb(255, 255, 255);
+        transform: scale(1.05) !important;
+    }
+
+    .modern-btn-secondary {
+        background: #616161;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+    }
+
+    .modern-btn-secondary:hover {
+        background-color: #21212a !important;
+        color: rgb(255, 255, 255);
+        transform: scale(1.05) !important;
+    }
+
+    .modern-btn-warning {
+        background-color: #ff8400;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        border: none;
+    }
+    .modern-btn-warning:hover {
+        background-color: #ffffff;
+        color: rgb(0, 0, 0);
+        transform: scale(1.05) !important;
+    }
+
+    .modern-btn-dark {
+        background-color: #16161f;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        border: none;
+    }
+
+    .modern-btn-dark:hover {
+        background-color: #ffffff;
+        color: rgb(0, 0, 0);
+        transform: scale(1.03) !important;
+    }
+
+    /* Select & Input */
+    .modern-select,
+    .modern-input {
+        height: 38px;
+        padding: 5px 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+    }
+
+    /*FILTER AND DATE PICKER */
+    /* Summary Card Styling */
+    .summary-card {
+        background: linear-gradient(135deg, #1E90FF, #003459);
+        color: white;
+        border-radius: 15px;
+        padding: 10px;
+        text-align: center;
+        width: 100%;
+        height: 70%;
+    }
+
+    .summary-amount {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    /* Date Picker Styling */
+    .datepicker {
+        border: 2px solid #1E90FF;
+        border-radius: 8px;
+        padding: 7px;
+        font-size: 16px;
+        text-align: center;
+        width: 100%;
+        height: 15% !important;
+    }
+
+    .datepicker:focus {
+        border-color: #003459;
+        box-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
+    }
+</style>
+
+
 <div class="container-fluid">
     <!-- Title -->
     <h1 class="text-center mb-4 no-print" style="font-family: 'Poppins', sans-serif;">Reports & Analytics</h1>
@@ -28,15 +178,21 @@
         <div class="col-lg-12">
             <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
                 <div>
-                    <h3 class="mb-3">Net & Gross Income Report</h3>
+                    <h3 class="mb-2">Net & Gross Income Report</h3>
                 </div>
-                <div>
+               
 
         <!-- Print Button (Aligned Right) -->
-        <div class="d-flex justify-content-end gap-2 no-print">
-            <button class="btn" style="background-color: #3a33ff; color: white;height: 38px; padding: 0 20px; font-size: 14px; display: flex; align-items: center; justify-content: center; border-radius: 1px;" onclick="window.print()">Print</button>
+        <div class="d-flex justify-content-end gap-2 no-print">           
+            <button class="modern-btn-dark" onclick="window.print()">
+                <i class="fas fa-print"></i> Print
+            </button>
+            <a href="{{ route('reports.export.stock', request()->query()) }}" class="modern-btn-warning">
+                <i class="fas fa-file-export"></i> Export
+            </a>
         </div>
-
+    </div>
+    
     <!-- Date Picker Form -->
     <form method="GET" action="{{ route('reports.income') }}" class="row justify-content-center align-items-end mb-4">
         <div class="col-md-3 no-print">
@@ -47,17 +203,17 @@
             <label for="end_date" class="form-label">End Date:</label>
             <input type="text" id="end_date" name="end_date" class="form-control datepicker no-print" value="{{ request('end_date') }}">
         </div>
-        <div class="col-md-2 d-flex">
-            <button type="submit" class="btn btn-primary w-100 filter-btn no-print"><i class="fas fa-filter"></i> Filter</button>
-        </div>
-        <div class="col-md-2 d-flex">
-            <a href="{{ route('reports.income') }}" class="btn btn-secondary w-100 clear-btn no-print"><i class="fas fa-sync"></i> Clear</a>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn modern-btn-primary no-print">Filter</button>
+            <a href="{{ route('reports.income') }}" class="btn modern-btn-secondary no-print">Clear</a>
         </div>
     </form>
 
+    </form>
+
     <!-- Summary Section -->
-    <div class="row justify-content-center mb-3">
-        <div class="col-md-4">
+    <div class="row justify-content-center mb-0">
+        <div class="col-md-6">
             <div class="card summary-card shadow-sm">
                 <div class="card-body text-center">
                     <h4>Gross Income</h4>
@@ -65,7 +221,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card summary-card shadow-sm">
                 <div class="card-body text-center">
                     <h4>Net Income</h4>
@@ -142,179 +298,4 @@
     });
 </script>
 
-<style>
-    
-    /* Hide elements for print */
-    @media print {
-        .no-print {
-            display: none !important;
-        }
-    }
-
-    /* Container for the buttons */
-    .d-flex {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-
-    /* Smooth Transition Effects */
-    .report-tab {
-        background-color: #007BFF; /* Soft blue background */
-        color: white;
-        border-radius: 30px;
-        padding: 12px 25px;
-        font-size: 16px;
-        margin: 8px;
-        text-align: center;
-        text-transform: uppercase; /* Make text all caps for uniformity */
-        font-weight: 500; /* Slightly bolder text */
-        transition: all 0.3s ease-in-out, box-shadow 0.2s ease, transform 0.2s ease; /* Added transitions */
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow for depth */
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px; /* Space between icon and text */
-    }
-
-    /* Active tab (highlighted) */
-    .report-tab.active {
-        background-color: #012a57; /* Darker blue */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Darker shadow on active */
-    }
-
-    /* Hover effect with animation */
-    .report-tab:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-        transform: translateY(-3px); /* Slightly raise the button */
-        color: white;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
-    }
-
-    /* Adding icons styles */
-    .report-tab i {
-        font-size: 20px; /* Icon size */
-        transition: transform 0.2s ease; /* Smooth icon transition */
-    }
-
-    .report-tab:hover i {
-        transform: translateX(5px); /* Slight movement of the icon when hovering */
-    }
-
-    /* Flexbox layout for the buttons */
-    .d-flex {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        flex-wrap: wrap;
-        margin-top: 20px;
-    }
-
-    /* Card Layout for Content (optional if you want to apply to other parts of the page) */
-    .card {
-        border-radius: 12px;
-        background-color: #fff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Elevation effect */
-        padding: 20px;
-        margin: 15px;
-    }
-
-    /* General Button Style */
-    .btn {
-        font-family: 'Poppins', sans-serif;
-        border-radius: 30px;
-        padding: 12px 25px;
-        font-size: 16px;
-    }
-
-    /* Button active color */
-    .btn-primary {
-        background-color: #0066cc;
-        border: none;
-    }
-
-    /* Buttons hover effects */
-    .btn:hover {
-        opacity: 0.9;
-        transform: translateY(-2px); /* Slight upward movement */
-    }
-
-    /* For mobile responsiveness */
-    @media (max-width: 768px) {
-        .report-tab {
-            font-size: 14px; /* Smaller font size on mobile */
-            padding: 10px 18px; /* Adjust padding */
-        }
-
-        .report-tab i {
-            font-size: 18px; /* Slightly smaller icons for smaller screens */
-        }
-    }
-
-
-
-    /* Summary Card Styling */
-    .summary-card {
-        background: linear-gradient(135deg, #1E90FF, #003459);
-        color: white;
-        border-radius: 15px;
-        padding: 20px;
-        text-align: center;
-    }
-
-    .summary-amount {
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    /* Print Button Styling */
-    .print-btn {
-        background-color: #4843d1;
-        color: white;
-        font-weight: 600;
-        padding: 10px 20px;
-        border-radius: 8px;
-        transition: all 0.3s ease-in-out;
-    }
-
-    .print-btn:hover {
-        background-color: #ff651e;
-        color: white;
-        transform: scale(1.03);
-    }
-
-    /* Date Picker Styling */
-    .datepicker {
-        border: 2px solid #1E90FF;
-        border-radius: 8px;
-        padding: 12px;
-        font-size: 16px;
-        text-align: center;
-        width: 100%;
-    }
-
-    .datepicker:focus {
-        border-color: #003459;
-        box-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
-    }
-
-    /* Filter and Clear Buttons */
-    .filter-btn, .clear-btn {
-        font-size: 16px;
-        padding: 12px;
-        border-radius: 8px;
-    }
-
-    .clear-btn {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .clear-btn:hover {
-        background-color: #b02a37;
-        transform: scale(1.05);
-    }
-</style>
 @endsection
